@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#123563">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="İstanbul">
+<meta name="description" content="Samuel & Zeynep · roteiro, mapa offline com GPS e lugares concluídos. Português, English, Türkçe.">
+<title>İstanbul · A dois</title>
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="stylesheet" href="./vendor/maplibre-gl.css">
+<link rel="stylesheet" href="./app.css">
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand">
+      <img src="./favicon.svg" alt="" class="brand-logo" width="40" height="40">
+      <div class="brand-text">
+        <span class="brand-name">İstanbul</span>
+        <span class="brand-sub" lang="pt">a dois · S &amp; Z</span>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="netpill" id="netpill" data-act="go-guide-map" aria-live="polite"></button>
+      <div class="langs" role="group" aria-label="Idioma">
+        <button data-lang="pt">PT</button><button data-lang="en">EN</button><button data-lang="tr">TR</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="views">
+    <section class="view" id="view-roteiro"></section>
+    <section class="view" id="view-mapa">
+      <div id="map"></div>
+      <div class="map-top" id="mapTop"></div>
+      <div class="map-tools" id="mapTools"></div>
+      <div class="map-legend" id="mapLegend"></div>
+      <div class="map-sheet" id="mapSheet" hidden></div>
+      <div class="map-fallback" id="mapFallback" hidden></div>
+    </section>
+    <section class="view" id="view-lugares"></section>
+    <section class="view" id="view-intervalo"></section>
+    <section class="view" id="view-guia"></section>
+  </main>
+
+  <nav class="tabbar" id="tabbar"></nav>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <div class="sheet-backdrop" id="sheetBackdrop" hidden></div>
+  <div class="sheet" id="sheet" hidden></div>
+</div>
+<script src="./data.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
