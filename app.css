@@ -366,3 +366,25 @@ button.row{width:100%;text-align:left}
 .hide{display:none!important}
 @media (min-width:760px){.hero h1{font-size:34px}.hero,.hero-in{min-height:250px}}
 @media (max-width:360px){.brand-sub{display:none}.netpill{max-width:84px}}
+
+/* v6.1 */
+.sc-g{padding:0 10px 10px}
+.pl .sc-g{padding:0 12px 12px}
+.btn.gbtn{background:transparent;border:1px solid var(--line-2);color:var(--cobalt);text-decoration:none;font-size:12.5px}
+.btn.gbtn.wide{width:100%}
+.btn.gbtn svg.i{color:#E0463A}
+.row .btn.sm.icon{width:32px;padding:0;text-decoration:none;color:var(--cobalt)}
+.date .lk{font-style:normal;font-size:11px;line-height:1;position:absolute;top:5px;left:6px}
+.hero.locked{min-height:150px;background:linear-gradient(135deg,#3B2A5E,#14335E)}
+.hero.locked .hero-in{min-height:150px}
+.hero.locked h1{font-size:24px}
+.lockcard{border-color:color-mix(in srgb,var(--plum) 40%,var(--line))}
+.lockcard .eyebrow{color:var(--plum)}
+.vaultform{display:flex;gap:8px;margin-top:10px}
+.vaultform input{flex:1;min-width:0;height:42px;border-radius:12px;border:1px solid var(--line-2);background:var(--paper);padding:0 12px;font:inherit;font-size:15px;color:var(--ink)}
+.vaulterr{color:var(--bad);font-weight:700;font-size:13px;margin:8px 0 0}
+.card.gift{background:linear-gradient(180deg,color-mix(in srgb,var(--plum) 8%,var(--card)),var(--card))}
+.btn.wa{background:#1FA855;color:#fff;text-decoration:none}
+
+.maplibregl-marker.st-pin{z-index:1;opacity:.92}
+.maplibregl-marker.mk{z-index:3}

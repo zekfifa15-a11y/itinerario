@@ -13,7 +13,7 @@ const I = {
   tabRoteiro: ['Roteiro', 'Itinerary', 'Plan'], tabMapa: ['Mapa', 'Map', 'Harita'], tabLugares: ['Lugares', 'Places', 'Yerler'], tabIntervalo: ['80 min', '80 min', '80 dk'], tabGuia: ['Guia', 'Guide', 'Rehber'],
   online: ['Online', 'Online', 'Çevrimiçi'], offline: ['Offline', 'Offline', 'Çevrimdışı'], offReady: ['Mapa offline ✓', 'Offline map ✓', 'Harita hazır ✓'], noNetReady: ['Sem rede ✓', 'No signal ✓', 'Bağlantı yok ✓'], mapDl: ['Mapa', 'Map', 'Harita'],
   day: ['Dia', 'Day', 'Gün'], extra: ['Extra', 'Extra', 'Ekstra'], arrivalDay: ['Chegada', 'Arrival', 'Varış'], departureDay: ['Volta', 'Return', 'Dönüş'],
-  stops: ['paradas', 'stops', 'durak'], done: ['concluídos', 'done', 'tamam'], doneT: ['Concluídos', 'Completed', 'Tamamlananlar'], trash: ['Lixeira', 'Trash', 'Çöp kutusu'],
+  stops: ['paradas', 'stops', 'durak'], stop1: ['parada', 'stop', 'durak'], done: ['concluídos', 'done', 'tamam'], doneT: ['Concluídos', 'Completed', 'Tamamlananlar'], trash: ['Lixeira', 'Trash', 'Çöp kutusu'],
   leave: ['Saída do Airbnb', 'Leave the Airbnb', 'Airbnb’den çıkış'], back: ['De volta ao Airbnb', 'Back at the Airbnb', 'Airbnb’ye dönüş'],
   backLbl: ['Volta para casa', 'Return home', 'Eve dönüş'], approx: ['estimado', 'estimated', 'tahmini'],
   next: ['Próxima', 'Next', 'Sıradaki'], conclude: ['Concluir', 'Done', 'Tamam'], undo: ['Desfazer', 'Undo', 'Geri al'], restore: ['Restaurar', 'Restore', 'Geri yükle'],
@@ -83,6 +83,13 @@ const I = {
   scheduled: ['No roteiro', 'Scheduled', 'Planda'], ofDay: ['do dia', 'of the day', 'günün'],
   nextStopBtn: ['Rota até a próxima', 'Route to next stop', 'Sıradaki durağa rota'], homeBtn: ['Voltar ao Airbnb daqui', 'Back to Airbnb from here', 'Buradan Airbnb’ye'],
   photo: ['Foto', 'Photo', 'Fotoğraf'],
+  googleSee: ['Ver no Google · fotos e avaliações', 'See on Google · photos & reviews', 'Google’da gör · fotoğraf ve yorumlar'],
+  vaultT: ['ÁREA PRIVADA', 'PRIVATE AREA', 'ÖZEL ALAN'], vaultBig: ['Este dia é protegido por senha', 'This day is password-protected', 'Bu gün şifre korumalı'],
+  vaultSmall: ['Este dia tem uma parte privada. Digite a senha para ver.', 'This day has a private part. Enter the password to see it.', 'Bu günün özel bir bölümü var. Görmek için şifreyi girin.'],
+  vaultPh: ['Senha', 'Password', 'Şifre'], vaultBtn: ['Desbloquear', 'Unlock', 'Kilidi aç'], vaultErr: ['Senha incorreta.', 'Wrong password.', 'Yanlış şifre.'],
+  vaultOk: ['Área privada aberta', 'Private area unlocked', 'Özel alan açıldı'], vaultLock: ['Bloquear de novo', 'Lock again', 'Tekrar kilitle'],
+  vaultNoCrypto: ['Abra o app pelo endereço https para usar a senha.', 'Open the app over https to use the password.', 'Şifre için uygulamayı https ile açın.'],
+  resT: ['RESERVA', 'BOOKING', 'REZERVASYON'], waMsg: ['Mensagem pronta (em turco)', 'Ready message (Turkish)', 'Hazır mesaj'],
 };
 let LANG = 'pt';
 const LI = { pt: 0, en: 1, tr: 2 };
@@ -126,6 +133,8 @@ const IC = {
   plane: '<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>',
   layers: '<path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/>',
   shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  gmaps: '<path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><path d="M15 9.5h-3v2h1.7a2 2 0 1 1-.6-2.2"/>',
+  chat: '<path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1 1 21 12z"/>',
   heart: '<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/>',
 };
 const ic = (n, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${IC[n] || ''}</svg>`;
@@ -176,12 +185,12 @@ function rebuildPlaces() {
 rebuildPlaces();
 const ASIAN = new Set(TRIP.asian);
 const EXPLICIT = new Set(TRIP.explicit);
-const photoURL = id => (TRIP.photos[id] && TRIP.photos[id].img) ? `./img/${id}.webp` : null;
+const photoURL = id => { const pid = (PL[id] && PL[id].photoOf) || id; return (TRIP.photos[pid] && TRIP.photos[pid].img) ? `./img/${pid}.webp` : null; };
 const kindLabel = p => p.kind === 'food' ? t('kFood') : p.kind === 'shop' ? t('kShop') : p.kind === 'transport' ? t('kTransport') : p.kind === 'base' ? t('kBase') : t('kSight');
 const kindIcon = p => p.kind === 'food' ? 'food' : p.kind === 'shop' ? 'shop' : p.kind === 'transport' ? 'ferry' : p.church ? 'church' : p.id === 'base' ? 'home' : p.id === 'university' ? 'cap' : 'star';
 const phHTML = (id, cls = '') => { const u = photoURL(id); const p = PL[id] || {}; return `<div class="ph ${cls}">${u ? `<img src="${u}" alt="" loading="lazy" decoding="async">` : ic(kindIcon(p))}</div>`; };
 const googleURL = p => {
-  for (const u of [p.mapsUrl, p.source]) if (u && /^(https:\/\/maps\.app\.goo\.gl|https:\/\/(www|maps)\.google\.com\/maps\/place)/.test(u)) return u;
+  for (const u of [p.mapsUrl, p.source]) if (u && /^(https:\/\/maps\.app\.goo\.gl|https:\/\/share\.google|https:\/\/(www|maps)\.google\.com\/maps\/(place|search))/.test(u)) return u;
   if (p.custom || !p.address) return `https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;
   return `https://www.google.com/maps/search/?${new URLSearchParams({ api: '1', query: `${p.name}, ${p.address}, İstanbul, Türkiye` })}`;
 };
@@ -224,7 +233,8 @@ function K(a, b) {
   return sideOf(a) === sideOf(b) ? (n > 2 ? Math.ceil(15 + n * 4) : Math.max(3, Math.ceil(n * 1.3 / 4.2 * 60))) : Math.ceil(35 + n * 3);
 }
 const NOMEAL = new Set(['emek-borek', 'lades-menemen', 'walton', 'dogaciyiz', 'yesim', 'vefa', 'oakberry', 'hafiz', 'beyzade']);
-const isMeal = (p, day) => p.kind === 'food' && !NOMEAL.has(p.id) && day.mealPeriod !== 'lunch' && !(day.lunchStops || []).includes(p.id);
+const FOOD_GAP = 150; // at least 2h30 between food stops
+const isMeal = (p, day) => p.kind === 'food' && !p.snack && !NOMEAL.has(p.id) && day.mealPeriod !== 'lunch' && !(day.lunchStops || []).includes(p.id);
 const V3 = (a, b, c) => ({ pt: a, en: b, tr: c });
 function infoOf(p, wd) {
   const G = TRIP.info;
@@ -263,22 +273,26 @@ function schedule(day) {
   if (day.budget) return { ...day, stops: open.map(id => ({ id, time: '—' })), skipped, ordered: false };
   const geo = day.geographicOrder ? orderGeo(day, open) : [];
   let cur = PL[day.start];
-  let tm = Math.max(hm(day.startTime) ?? 540, day.slot === 'main' && day.date && classInfo(day.date).classes.length ? hm(classInfo(day.date).outingStart) : 0);
+  let tm = Math.max(hm(day.startTime) ?? 540, day.slot === 'main' && !day.fromFaculty && day.date && classInfo(day.date).classes.length ? hm(classInfo(day.date).outingStart) : 0);
+  let lastFood = -Infinity;
   const dl = hm(day.endDeadline);
   let unknown = false; const out = []; const rest = [...open];
   while (rest.length) {
     const cands = rest.map(id => {
       const p = PL[id], inf = infoOf(p, wd), tr = K(cur, p);
       const op = inf.open ?? (p.kind === 'food' ? (['dogaciyiz', 'hafiz', 'beyzade'].includes(id) ? 540 : 690) : 540);
-      const arr = tm + tr, st = Math.max(arr, op, isMeal(p, day) ? 1080 : 0);
+      const arr = tm + tr, st = Math.max(arr, op, isMeal(p, day) ? 1080 : 0, p.kind === 'food' ? lastFood + FOOD_GAP : 0);
       return { id, p, inf, tr, st, wait: st - arr, km: hav(cur, p) };
     }).filter(c => (!c.inf.close || c.st + c.inf.duration <= c.inf.close) && (dl === undefined || (!c.p.unmapped && !c.inf.reservation && c.st + c.inf.duration + K(c.p, PL[day.end]) <= dl)));
     if (!cands.length) { skipped.push(...rest.map(id => ({ id, reason: dl === undefined ? 'late' : 'deadline' }))); break; }
-    const nw = cands.filter(c => c.wait === 0), pool = nw.length ? nw : cands;
+    let cs = cands;
+    if (day.foodFirst && out.length === 0) { const f = cands.filter(c => c.p.kind === 'food'); if (f.length) cs = f; }
+    const nw = cs.filter(c => c.wait === 0), pool = nw.length ? nw : cs;
     pool.sort((a, b) => nw.length ? a.km - b.km || a.tr - b.tr : a.st - b.st || a.km - b.km);
-    const first = out.length === 0 && cands.find(c => c.id === day.firstStop);
-    const g = geo.find(id => cands.some(c => c.id === id));
-    const pick = (g && cands.find(c => c.id === g)) || first || pool[0];
+    const first = out.length === 0 && cs.find(c => c.id === day.firstStop);
+    const g = geo.find(id => cs.some(c => c.id === id));
+    const pick = (g && cs.find(c => c.id === g)) || first || pool[0];
+    if (pick.p.kind === 'food') lastFood = pick.st;
     unknown = unknown || !!pick.p.unmapped || !!pick.inf.reservation;
     out.push({ id: pick.id, time: unknown ? '—' : fmtHM(pick.st), dur: pick.inf.duration });
     tm = pick.st + pick.inf.duration; cur = pick.p; rest.splice(rest.indexOf(pick.id), 1);
@@ -895,6 +909,38 @@ const Nav = {
   },
 };
 
+/* ---------------- password-protected content (AES-GCM, key from PBKDF2) ---------------- */
+const Vault = {
+  unlocked: false, data: null, busy: false,
+  has() { return !!TRIP.locked; },
+  dates() { return (TRIP.locked && TRIP.locked.dates) || []; },
+  async unlock(pw, silent) {
+    const Lk = TRIP.locked; if (!Lk || this.unlocked) return true;
+    if (!(window.crypto && crypto.subtle)) { if (!silent) UI.toast(t('vaultNoCrypto')); return false; }
+    const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+    try {
+      this.busy = true;
+      const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
+      const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: b64(Lk.salt), iterations: Lk.iter, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+      const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(Lk.iv) }, key, b64(Lk.ct));
+      this.apply(JSON.parse(new TextDecoder().decode(pt)));
+      try { sessionStorage.setItem('ist-vault', pw); } catch (e) { }
+      return true;
+    } catch (e) { return false; } finally { this.busy = false; }
+  },
+  apply(P) {
+    Object.assign(TRIP.places, P.places || {}); Object.assign(TRIP.info, P.info || {}); Object.assign(ROUTES, P.routes || {});
+    rebuildPlaces();
+    if (P.day28) { const i = DAYS.findIndex(d => d.id === P.day28.id); if (i >= 0) DAYS[i] = P.day28; const j = TRIP.days.findIndex(d => d.id === P.day28.id); if (j >= 0) TRIP.days[j] = P.day28; }
+    for (const b of P.breaks || []) if (!TRIP.breaks.some(x => x.id === b.id)) TRIP.breaks.push(b);
+    this.data = P; this.unlocked = true;
+  },
+  lock() { try { sessionStorage.removeItem('ist-vault'); } catch (e) { } location.reload(); },
+  async auto() { let pw = null; try { pw = sessionStorage.getItem('ist-vault'); } catch (e) { } if (pw && await this.unlock(pw, true)) UI.refresh(); },
+  gifts(date) { return this.unlocked && this.data.gifts && this.data.gifts.date === date ? this.data.gifts : null; },
+  reservations(date) { return this.unlocked ? (this.data.reservations || []).filter(r => !date || r.date === date) : []; },
+};
+
 /* ---------------- days ---------------- */
 const DAYS = TRIP.days.slice().sort((a, b) => a.date.localeCompare(b.date));
 const dayById = id => DAYS.find(d => d.id === id);
@@ -902,7 +948,9 @@ const todayISO = () => { try { return new Intl.DateTimeFormat('en-CA', { timeZon
 function currentDay() { return dayById(S.day) || DAYS.find(d => d.date === todayISO()) || DAYS[0]; }
 const dayLabel = d => d.number ? `${t('day')} ${d.number}` : d.date === '2026-10-21' ? t('arrivalDay') : d.departure ? t('departureDay') : t('extra');
 const dayPlaces = d => [...new Set([...d.stops.map(s => s.id), ...(S.additions[d.id] || [])])];
-const whereScheduled = (() => { let cache = null; return (id) => { if (!cache) { cache = {}; for (const d of DAYS) for (const pid of dayPlaces(d)) (cache[pid] ||= []).push(d.id); for (const b of TRIP.breaks) for (const s of b.stops) (cache[s.id] ||= []).push(b.date); } return cache[id] || []; }; })();
+const whereScheduled = id => { const out = []; for (const d of DAYS) if (dayPlaces(d).includes(id)) out.push(d.id); for (const b of TRIP.breaks) if (b.stops.some(s => s.id === id)) out.push(b.date); return out; };
+const gBtn = (p, cls = '') => p.custom ? '' : `<a class="btn gbtn ${cls}" href="${esc(googleURL(p))}" target="_blank" rel="noopener">${ic('gmaps', 's')}<span>${esc(t('googleSee'))}</span></a>`;
+const gIcon = p => p.custom ? '' : `<a class="btn sm icon" href="${esc(googleURL(p))}" target="_blank" rel="noopener" aria-label="Google">${ic('gmaps', 's')}</a>`;
 
 /* ---------------- UI ---------------- */
 const UI = {
@@ -940,18 +988,26 @@ const UI = {
     const dates = DAYS.map(x => {
       const xs = schedule(x).stops, alld = xs.length && xs.every(s => S.done[s.id]);
       const cls = classInfo(x.date).classes.length;
-      return `<button type="button" class="date ${x.id === d.id ? 'on' : ''} ${alld ? 'alldone' : ''}" data-act="day" data-day="${x.id}" aria-pressed="${x.id === d.id}"><span class="marks">${cls ? '<i class="mk class"></i>' : ''}${x.date === todayISO() ? '<i class="mk today"></i>' : ''}</span><span class="wd">${esc(fmtDate(x.date, { weekday: 'short' }).replace('.', ''))}</span><span class="dn">${fmtDate(x.date, { day: 'numeric' })}</span><span class="mo">${esc(fmtDate(x.date, { month: 'short' }).replace('.', ''))}</span></button>`;
+      return `<button type="button" class="date ${x.id === d.id ? 'on' : ''} ${alld ? 'alldone' : ''}" data-act="day" data-day="${x.id}" aria-pressed="${x.id === d.id}"><span class="marks">${x.locked ? '<i class="lk">🔒</i>' : ''}${x.special ? '<i class="lk">🎂</i>' : ''}${cls ? '<i class="mk class"></i>' : ''}${x.date === todayISO() ? '<i class="mk today"></i>' : ''}</span><span class="wd">${esc(fmtDate(x.date, { weekday: 'short' }).replace('.', ''))}</span><span class="dn">${fmtDate(x.date, { day: 'numeric' })}</span><span class="mo">${esc(fmtDate(x.date, { month: 'short' }).replace('.', ''))}</span></button>`;
     }).join('');
     const brks = TRIP.breaks.filter(b => b.date === d.date);
+    if (d.locked) {
+      const hh = `<div class="datestrip"><div class="dates" id="dates">${dates}</div></div><div class="wrap"><div class="hero locked"><div class="hero-in"><div class="hero-k"><span class="chip gold">${esc(dayLabel(d))}</span><span class="chip">${ic('cal', 'xs')}${esc(fmtDate(d.date, { weekday: 'long', day: 'numeric', month: 'long' }))}</span></div><h1>🔒 ${esc(L(d.title))}</h1><div class="area">${esc(L(d.note))}</div></div></div>${this.lockCard(true)}</div>`;
+      const v0 = $('#view-roteiro'); v0.innerHTML = hh; const ds0 = $('#dates'); if (ds0) { const on = ds0.querySelector('.on'); if (on) ds0.scrollLeft = on.offsetLeft - ds0.clientWidth / 2 + on.clientWidth / 2; }
+      return;
+    }
     let h = `<div class="datestrip"><div class="dates" id="dates">${dates}</div></div><div class="wrap">
       <div class="hero">${hero ? `<img src="${photoURL(hero)}" alt="">` : ''}
         ${all.length ? `<div class="ring" style="--p:${pct}"><span>${done.length}/${all.length}<small>${esc(t('done'))}</small></span></div>` : ''}
         <div class="hero-in"><div class="hero-k"><span class="chip gold">${esc(dayLabel(d))}</span><span class="chip">${ic('cal', 'xs')}${esc(fmtDate(d.date, { weekday: 'long', day: 'numeric', month: 'long' }))}</span></div>
         <h1>${esc(L(d.title))}</h1><div class="area">${esc(L(d.area))}</div>
-        <div class="hero-k" style="margin:10px 0 0">${ci.classes.length ? `<span class="chip">${ic('cap', 'xs')}${esc(t('classesT'))}</span>` : `<span class="chip">${ic('heart', 'xs')}${esc(t('noClass'))}</span>`}${all.length ? `<span class="chip">${ic('pin', 'xs')}${all.length} ${esc(t('stops'))}</span>` : ''}</div></div></div>
+        <div class="hero-k" style="margin:10px 0 0">${ci.classes.length ? `<span class="chip">${ic('cap', 'xs')}${esc(t('classesT'))}</span>` : `<span class="chip">${ic('heart', 'xs')}${esc(t('noClass'))}</span>`}${all.length ? `<span class="chip">${ic('pin', 'xs')}${all.length} ${esc(all.length === 1 ? t('stop1') : t('stops'))}</span>` : ''}</div></div></div>
       <p class="note">${esc(L(d.note))}</p>
       <div class="card trip-prog"><div style="flex:1"><b>${doneN} / ${totalPl.size}</b> <small>${esc(t('tripProg'))}</small><div class="bar" style="margin-top:7px"><i style="width:${totalPl.size ? doneN / totalPl.size * 100 : 0}%"></i></div></div><button class="btn sm" data-act="map-day" data-day="${d.id}">${ic('map', 's')}${esc(t('mapBtn'))}</button></div>`;
+    if (Vault.has() && !Vault.unlocked && Vault.dates().includes(d.date)) h += this.lockCard(false);
+    for (const r of Vault.reservations(d.date)) h += this.reservationCard(r);
     if (d.date === '2026-10-21') h += this.arrivalCard();
+    const gf = Vault.gifts(d.date); if (gf) h += this.giftsCard(gf);
     if (d.departure) h += this.departureCard();
     if (ci.classes.length || ci.arrival) h += this.classesCard(d, ci);
     for (const b of brks) h += this.breakCard(b);
@@ -975,7 +1031,7 @@ const UI = {
     const nextId = pend.length ? pend[0].id : null;
     const isBreak = d.slot === 'monday-break';
     let h = `<ol class="tl">`;
-    const startTime = d.slot === 'main' && d.date && classInfo(d.date).classes.length ? classInfo(d.date).outingStart : d.startTime;
+    const startTime = d.slot === 'main' && !d.fromFaculty && d.date && classInfo(d.date).classes.length ? classInfo(d.date).outingStart : d.startTime;
     h += `<li class="node"><span class="pin">${ic(d.start === 'university' ? 'cap' : 'home', 's')}</span><span class="lbl">${esc(d.start === 'university' ? t('faculty') : t('leave'))}<small>${esc(start ? start.name : '')}</small></span><span class="t">${esc(startTime || '')}</span></li>`;
     if (!all.length) h += `<li class="empty">${esc(t('freeDay'))}</li>`;
     all.forEach((s, i) => {
@@ -1022,7 +1078,7 @@ const UI = {
       ${open ? this.details(p, inf) : ''}
       <div class="sc-act"><button class="btn ${done ? 'ok' : 'pri'}" data-act="toggle" data-id="${p.id}">${ic(done ? 'undo' : 'check', 's')}${esc(done ? t('undo') : t('conclude'))}</button>
       ${p.unmapped ? '' : `<button class="btn" data-act="map-place" data-id="${p.id}" data-day="${d.slot === 'main' ? d.id : ''}">${ic('map', 's')}${esc(t('mapBtn'))}</button><button class="btn" data-act="nav" data-id="${p.id}" data-from="${this.prevOf(d, p.id)}">${ic('nav', 's')}${esc(t('go'))}</button>`}
-</div></div></div></li>`;
+</div><div class="sc-g">${gBtn(p, 'wide')}</div></div></div></li>`;
   },
   prevOf(d, id) { const sc = schedule(d); const i = sc.stops.findIndex(s => s.id === id); return i > 0 ? sc.stops[i - 1].id : d.start; },
   details(p, inf) {
@@ -1041,7 +1097,7 @@ const UI = {
     if (!ids.length) return '';
     return `<details class="fold" open><summary><span class="ic">${ic('check', 's')}</span>${esc(t('doneT'))}<span class="cnt">${ids.length}</span><span class="chev">${ic('chevD', 's')}</span></summary><div class="rows">${ids.map(id => {
       const p = PL[id]; const when = S.done[id] ? new Date(S.done[id]) : null;
-      return `<div class="row done">${phHTML(id)}<div class="rt"><b>${esc(p.name)}</b><span>${esc(kindLabel(p))}${when ? ' · ✓ ' + when.toLocaleTimeString(LOC[LANG], { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Istanbul' }) + ' · ' + fmtDate(when.toISOString().slice(0, 10), { day: 'numeric', month: 'short' }) : ''}</span></div><button class="btn sm" data-act="toggle" data-id="${id}">${ic('undo', 's')}${esc(t('undo'))}</button></div>`;
+      return `<div class="row done">${phHTML(id)}<div class="rt"><b>${esc(p.name)}</b><span>${esc(kindLabel(p))}${when ? ' · ✓ ' + when.toLocaleTimeString(LOC[LANG], { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Istanbul' }) + ' · ' + fmtDate(when.toISOString().slice(0, 10), { day: 'numeric', month: 'short' }) : ''}</span></div>${gIcon(p)}<button class="btn sm" data-act="toggle" data-id="${id}">${ic('undo', 's')}${esc(t('undo'))}</button></div>`;
     }).join('')}</div></details>`;
   },
   trashFold(ids) {
@@ -1052,13 +1108,28 @@ const UI = {
     let h = `<div class="card panel sec"><div class="eyebrow">${esc(t('classesT'))}</div>`;
     if (ci.classes.length) h += `<div class="classes">${ci.classes.map(c => `<div class="cl"><b>${c.start}–${c.end}</b><span>${esc(c.name)}</span></div>`).join('')}</div>`;
     if (ci.arrival) h += `<p>${esc(L(G.arrMeet))}</p>`;
-    if (ci.classes.length && !d.departure) h += `<div class="callout blue" style="margin-top:10px">${ic('heart')}<div><strong>${esc(t('outing'))} · ${ci.outingStart}</strong><br>${esc(t('outingTxt', { a: ci.earliestHomeArrival }))}</div></div>`;
-    if (ci.classes.length && !ci.arrival && !d.departure) h += `<p style="font-size:13px">${esc(L(G.faculty).replace('{dep}', ci.departure).replace('{arr}', ci.campusArrival))}</p><button class="btn sm" data-act="map-route" data-key="base__university">${ic('tram', 's')}${esc(t('facT'))}</button>`;
+    if (ci.classes.length && !ci.arrival) h += `<div class="callout green" style="margin-top:10px">${ic('cap')}<div>${esc(L(G.classMorning).replace('{dep}', ci.departure).replace('{arr}', ci.campusArrival))}</div></div><div class="links" style="margin-top:8px"><button class="btn sm" data-act="map-route" data-key="base__university">${ic('tram', 's')}${esc(t('facT'))}</button><button class="btn sm ghost" data-tab="intervalo">${ic('clock', 's')}${esc(t('tabIntervalo'))}</button></div>`;
+    if (ci.classes.length && !d.departure && d.fromFaculty) h += `<div class="callout blue" style="margin-top:10px">${ic('heart')}<div><strong>${esc(t('outing'))} · ${esc(d.startTime)}</strong><br>${esc(L(G.classOuting).replace('{end}', ci.classes[ci.classes.length - 1].end).replace('{start}', d.startTime))}</div></div>`;
+    else if (ci.classes.length && !d.departure) h += `<div class="callout blue" style="margin-top:10px">${ic('heart')}<div><strong>${esc(t('outing'))} · ${ci.outingStart}</strong><br>${esc(t('outingTxt', { a: ci.earliestHomeArrival }))}</div></div>`;
     return h + '</div>';
+  },
+  lockCard(big) {
+    return `<div class="card panel sec lockcard ${big ? 'big' : ''}"><div class="eyebrow">🔒 ${esc(t('vaultT'))}</div>${big ? `<h3>${esc(t('vaultBig'))}</h3>` : `<p style="margin:4px 0 0">${esc(t('vaultSmall'))}</p>`}
+      <form class="vaultform" data-vault onsubmit="return false"><input class="vaultpw" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${esc(t('vaultPh'))}" aria-label="${esc(t('vaultPh'))}"><button class="btn pri" data-act="unlock" type="submit">${ic('shield', 's')}${esc(t('vaultBtn'))}</button></form><p class="vaulterr" hidden>${esc(t('vaultErr'))}</p></div>`;
+  },
+  checklist(key, items, title) {
+    const all = items.map((x, i) => ({ k: `${key}:${i}`, x })), pend = all.filter(o => !S.steps[o.k]), done = all.filter(o => S.steps[o.k]);
+    return `${title ? `<h3 style="font-size:16px;margin-top:12px">${esc(title)}</h3>` : ''}<ol class="steps">${pend.map(o => `<li class="step gold"><span class="sn">${all.indexOf(o) + 1}</span><div class="st"><b style="margin:0">${esc(L(o.x))}</b></div><button class="chk" data-act="step" data-step="${o.k}" aria-label="ok">${ic('check', 's')}</button></li>`).join('')}</ol>
+      ${done.length ? `<details class="fold" open><summary><span class="ic">${ic('check', 's')}</span>${esc(t('doneT'))}<span class="cnt">${done.length}</span><span class="chev">${ic('chevD', 's')}</span></summary><div class="rows">${done.map(o => `<div class="row done"><span class="tick">${ic('check', 'xs')}</span><div class="rt"><b>${esc(L(o.x))}</b></div><button class="btn sm" data-act="step" data-step="${o.k}">${ic('undo', 's')}</button></div>`).join('')}</div></details>` : ''}`;
+  },
+  giftsCard(g) { return `<div class="card panel sec gift"><div class="eyebrow">🔒 ${esc(t('vaultT'))}</div><h3>${esc(L(g.title))}</h3>${this.checklist('gift', g.items)}</div>`; },
+  reservationCard(r) {
+    return `<div class="card panel sec"><div class="eyebrow">🔒 ${esc(t('resT'))}</div><h3>${esc(L(r.title))}</h3><p><b style="font-family:var(--mono);font-size:16px">${esc(r.code)}</b> · ${esc(r.name)}</p><p>${esc(L(r.text))}</p><div class="links">${r.links.map(([l, u]) => `<a class="btn sm" href="${esc(u)}" target="_blank" rel="noopener">${ic('ext', 's')}${esc(L(l))}</a>`).join('')}</div></div>`;
   },
   breakCard(b) {
     const sc = schedule(b);
-    return `<div class="card panel sec" style="border-color:color-mix(in srgb,var(--plum) 35%,var(--line))"><div class="eyebrow" style="color:var(--plum)">${esc(t('breakT'))}</div><h3>${esc(L(b.title))}</h3><p style="font-size:12.5px;font-weight:700;color:var(--muted)">${esc(t('breakFrom'))}</p><p>${esc(L(b.note))}</p>${this.timeline(b, sc)}${this.doneFold(sc.stops.filter(s => S.done[s.id]).map(s => s.id), b)}</div>`;
+    const wa = b.whatsapp ? `<div class="links" style="margin:8px 0"><a class="btn sm wa" href="https://wa.me/${b.whatsapp.number}?text=${encodeURIComponent(b.whatsapp.msg)}" target="_blank" rel="noopener">${ic('chat', 's')}WhatsApp ${esc(b.whatsapp.label)}</a></div><p class="credits">${esc(t('waMsg'))}: “${esc(b.whatsapp.msg)}” — ${esc(b.whatsapp.msgPt)}</p>` : '';
+    return `<div class="card panel sec ${b.private ? 'gift' : ''}" style="border-color:color-mix(in srgb,var(--plum) 35%,var(--line))"><div class="eyebrow" style="color:var(--plum)">${esc(b.eyebrow ? L(b.eyebrow) : t('breakT'))}</div><h3>${esc(L(b.title))}</h3><p style="font-size:12.5px;font-weight:700;color:var(--muted)">${esc(b.from ? L(b.from) : t('breakFrom'))}</p><p>${esc(L(b.note))}</p>${wa}${this.timeline(b, sc)}${this.doneFold(sc.stops.filter(s => S.done[s.id]).map(s => s.id), b)}${b.checklist ? this.checklist('chk-' + b.id, b.checklist) : ''}</div>`;
   },
   arrivalCard() {
     const G = TRIP.guide, steps = TRIP.arrival;
@@ -1117,10 +1188,10 @@ const UI = {
     const done = live.filter(p => S.done[p.id]).sort((a, b) => S.done[b.id] - S.done[a.id]);
     const trash = list.filter(p => S.trash.includes(p.id));
     const card = p => { const d = firstDay(p.id); return `<div class="card pl"><div class="phw">${phHTML(p.id, 'lg')}<span class="daychip">${d ? esc(dayLabel(d) + ' · ' + fmtDate(d.date, { day: 'numeric', month: 'short' })) : esc(t('notInPlan'))}</span></div><div class="pl-b"><span class="kind">${esc(kindLabel(p))}</span><h4>${esc(p.name)}</h4><div class="sub">${esc(p.area || '')}${p.rating ? ` · <span style="color:var(--gold);font-weight:800">★ ${String(p.rating).replace('.', LANG === 'en' ? '.' : ',')}</span>` : ''}${!p.unmapped ? ` · ${fmtDist(hav(p, Geo.fresh(300000) || PL.base) * 1000)}` : ''}</div></div>
-      <div class="sc-act"><button class="btn pri" data-act="toggle" data-id="${p.id}">${ic('check', 's')}${esc(t('conclude'))}</button>${p.unmapped ? '' : `<button class="btn" data-act="map-place" data-id="${p.id}" data-day="${d && d.slot === 'main' ? d.id : ''}">${ic('map', 's')}${esc(t('mapBtn'))}</button><button class="btn" data-act="nav" data-id="${p.id}">${ic('nav', 's')}</button>`}<button class="btn icon" data-act="add-day-sheet" data-id="${p.id}" aria-label="${esc(t('addToDay'))}">${ic('plus', 's')}</button></div></div>`; };
+      <div class="sc-act"><button class="btn pri" data-act="toggle" data-id="${p.id}">${ic('check', 's')}${esc(t('conclude'))}</button>${p.unmapped ? '' : `<button class="btn" data-act="map-place" data-id="${p.id}" data-day="${d && d.slot === 'main' ? d.id : ''}">${ic('map', 's')}${esc(t('mapBtn'))}</button><button class="btn" data-act="nav" data-id="${p.id}">${ic('nav', 's')}</button>`}<button class="btn icon" data-act="add-day-sheet" data-id="${p.id}" aria-label="${esc(t('addToDay'))}">${ic('plus', 's')}</button></div><div class="sc-g">${gBtn(p, 'wide')}</div></div>`; };
     let h = `<div class="sec-h"><h2>${esc(t('toVisit'))}</h2><span class="meta">${pend.length}</span></div>`;
     h += pend.length ? `<div class="pl-grid">${pend.map(card).join('')}</div>` : `<div class="empty">${esc(t('nothing'))}</div>`;
-    if (done.length) h += `<details class="fold" open><summary><span class="ic">${ic('check', 's')}</span>${esc(t('doneT'))}<span class="cnt">${done.length}</span><span class="chev">${ic('chevD', 's')}</span></summary><div class="rows">${done.map(p => `<div class="row done">${phHTML(p.id)}<div class="rt"><b>${esc(p.name)}</b><span>${esc(kindLabel(p))} · ✓ ${new Date(S.done[p.id]).toLocaleDateString(LOC[LANG], { day: 'numeric', month: 'short', timeZone: 'Europe/Istanbul' })}</span></div><button class="btn sm" data-act="toggle" data-id="${p.id}">${ic('undo', 's')}${esc(t('undo'))}</button></div>`).join('')}</div></details>`;
+    if (done.length) h += `<details class="fold" open><summary><span class="ic">${ic('check', 's')}</span>${esc(t('doneT'))}<span class="cnt">${done.length}</span><span class="chev">${ic('chevD', 's')}</span></summary><div class="rows">${done.map(p => `<div class="row done">${phHTML(p.id)}<div class="rt"><b>${esc(p.name)}</b><span>${esc(kindLabel(p))} · ✓ ${new Date(S.done[p.id]).toLocaleDateString(LOC[LANG], { day: 'numeric', month: 'short', timeZone: 'Europe/Istanbul' })}</span></div>${gIcon(p)}<button class="btn sm" data-act="toggle" data-id="${p.id}">${ic('undo', 's')}${esc(t('undo'))}</button></div>`).join('')}</div></details>`;
     if (trash.length) h += this.trashFold(trash.map(p => p.id));
     $('#pllist').innerHTML = h;
   },
@@ -1136,7 +1207,7 @@ const UI = {
         <div class="budget"><i class="w" style="width:${b.walk / tot * 100}%"></i><i class="v" style="width:${b.visit / tot * 100}%"></i><i class="b" style="width:${b.buffer / tot * 100}%"></i></div>
         <div class="blegend"><span class="w">${b.walk} ${esc(t('minutes'))} ${esc(t('walkV'))}</span><span class="v">${b.visit} ${esc(t('visitV'))}</span><span class="b">${b.buffer} ${esc(t('bufV'))}</span></div>
         <p style="font-size:13.5px;line-height:1.5;color:var(--ink-2);margin:10px 0 0">${esc(L(c.note))}</p></div>
-        <div class="sc-act"><button class="btn ${isDone(c) ? 'ok' : 'pri'}" data-act="toggle" data-id="${p.id}">${ic(isDone(c) ? 'undo' : 'check', 's')}${esc(isDone(c) ? t('undo') : t('conclude'))}</button><button class="btn" data-act="map-circuit" data-id="${c.id}">${ic('map', 's')}${esc(t('mapBtn'))}</button><button class="btn" data-act="nav" data-id="${p.id}" data-from="university">${ic('nav', 's')}${esc(t('go'))}</button></div></div>`;
+        <div class="sc-act"><button class="btn ${isDone(c) ? 'ok' : 'pri'}" data-act="toggle" data-id="${p.id}">${ic(isDone(c) ? 'undo' : 'check', 's')}${esc(isDone(c) ? t('undo') : t('conclude'))}</button><button class="btn" data-act="map-circuit" data-id="${c.id}">${ic('map', 's')}${esc(t('mapBtn'))}</button><button class="btn" data-act="nav" data-id="${p.id}" data-from="university">${ic('nav', 's')}${esc(t('go'))}</button></div><div class="sc-g">${gBtn(p, 'wide')}</div></div>`;
     };
     $('#view-intervalo').innerHTML = `<div class="wrap" style="padding-top:14px"><div class="eyebrow">${esc(t('tabIntervalo'))}</div><h2 style="font-family:var(--serif);font-size:24px;margin:2px 0 6px">${esc(t('intH'))}</h2><p class="note" style="margin-top:4px">${esc(L(TRIP.guide.circuitsIntro))}</p>
       <div class="pl-grid">${pend.map(card).join('')}</div>
@@ -1152,6 +1223,7 @@ const UI = {
     const credits = Object.entries(TRIP.photos).map(([id, p]) => `${esc(PL[id] ? PL[id].name : id)}: <a href="${esc(p.source)}" target="_blank" rel="noopener">${esc(p.credit)}</a> (${esc(p.license)})`).join(' · ');
     $('#view-guia').innerHTML = `<div class="wrap" style="padding-top:14px"><div class="eyebrow">${esc(t('tabGuia'))}</div><h2 style="font-family:var(--serif);font-size:24px;margin:2px 0 4px">${esc(t('guideH'))}</h2>
       <div class="card mappack" id="mappack" style="margin-top:12px"></div>
+      ${Vault.has() ? (Vault.unlocked ? gc('shield', t('vaultT'), t('vaultOk'), `${Vault.reservations().map(r => this.reservationCard(r)).join('')}<button class="btn sm ghost" data-act="lock">${ic('shield', 's')}${esc(t('vaultLock'))}</button>`) : this.lockCard(false)) : ''}
       ${gc('plane', L(G.arrTitle), L(G.arrLanding), `<p>${esc(L(G.arrChain))}</p><p>${esc(L(G.arrPlan))}</p><button class="btn sm" data-act="day" data-day="2026-10-21" data-goto="roteiro">${ic('route', 's')}${esc(t('arrivalSteps'))}</button> <button class="btn sm" data-act="map-route" data-key="ist__base">${ic('map', 's')}${esc(t('seeOnMap'))}</button>`)}
       ${gc('home', t('depT'), L(G.depTitle), `<ol class="steps">${G.depSteps.map(s => `<li class="step"><span class="sn" style="width:auto;padding:0 7px;border-radius:8px;font-family:var(--mono)">${s[0]}</span><div class="st">${esc(L(s[1]))}</div></li>`).join('')}</ol>`)}
       ${gc('cap', t('weekT'), t('classesT'), week)}
@@ -1242,6 +1314,8 @@ document.addEventListener('click', e => {
       break;
     }
     case 'toggle': UI.toggle(id); break;
+    case 'unlock': { const f = a.closest('[data-vault]'), inp = f && f.querySelector('.vaultpw'), err = f && f.parentElement.querySelector('.vaulterr'); if (!inp || !inp.value) { inp && inp.focus(); break; } a.disabled = true; Vault.unlock(inp.value.trim()).then(ok => { a.disabled = false; if (ok) { UI.toast(t('vaultOk')); UI.refresh(); if (MapView.map && MapView.ready) MapView.show({ type: 'day', dayId: currentDay().id }); } else { if (err) err.hidden = false; inp.select(); } }); break; }
+    case 'lock': Vault.lock(); break;
     case 'step': { const k = a.dataset.step; if (S.steps[k]) delete S.steps[k]; else S.steps[k] = Date.now(); save(); UI._keepScroll = true; UI.render(); break; }
     case 'more': if (UI.open.has(id)) UI.open.delete(id); else UI.open.add(id); UI._keepScroll = true; UI.render(); break;
     case 'leg-open': { const k = a.dataset.key; if (UI.openLeg.has(k)) UI.openLeg.delete(k); else UI.openLeg.add(k); UI._keepScroll = true; UI.render(); break; }
@@ -1300,6 +1374,7 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     if (ok) { Tiles.useCache(); }
     else if (navigator.onLine) setTimeout(() => MapPack.download(), 1200);
     Walk.load().then(r => { if (r) UI.refresh(); });
+  Vault.auto();
   });
 })();
 

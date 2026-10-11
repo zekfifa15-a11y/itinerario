@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#1D4F8C"/>
+      <stop offset="1" stop-color="#0A1D38"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F6D893"/>
+      <stop offset="1" stop-color="#C38E2C"/>
+    </linearGradient>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#163F75" stop-opacity="0"/>
+      <stop offset=".55" stop-color="#E9906B" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#F59A6B" stop-opacity=".7"/>
+    </linearGradient>
+    <clipPath id="arch"><path d="M134 438 V262 C134 198 178 162 215 138 C239 123 252 106 256 80 C260 106 273 123 297 138 C334 162 378 198 378 262 V438 Z"/></clipPath>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <g clip-path="url(#arch)">
+    <rect x="120" y="60" width="272" height="400" fill="url(#sky)"/>
+    <circle cx="186" cy="338" r="34" fill="#FBC98A"/>
+    <!-- skyline -->
+    <g fill="#10294F">
+      <path d="M150 300 L153 286 L156 300 Z"/><rect x="150" y="300" width="6" height="110"/>
+      <path d="M152 400 V372 A34 34 0 0 1 220 372 V400 Z"/>
+      <rect x="181" y="330" width="4" height="10"/>
+      <path d="M128 404 V384 A20 20 0 0 1 152 384 V404Z"/>
+      <path d="M352 318 L355 305 L358 318 Z"/><rect x="352" y="318" width="6" height="92"/>
+      <path d="M312 404 V384 A22 22 0 0 1 356 384 V404 Z"/>
+    </g>
+    <!-- Galata tower -->
+    <g fill="#F8EEDC">
+      <path d="M256 116 L292 214 H220 Z"/>
+      <rect x="253" y="96" width="6" height="24" rx="3"/>
+      <circle cx="256" cy="94" r="5.5"/>
+      <rect x="223" y="212" width="66" height="30" rx="2"/>
+      <path d="M209 240 H303 V255 H209 Z"/>
+      <path d="M216 255 H296 L301 410 H211 Z"/>
+    </g>
+    <g fill="#18406F">
+      <rect x="232" y="220" width="8" height="15" rx="4"/>
+      <rect x="252" y="220" width="8" height="15" rx="4"/>
+      <rect x="272" y="220" width="8" height="15" rx="4"/>
+      <rect x="212" y="243" width="88" height="3"/>
+      <rect x="238" y="276" width="10" height="21" rx="5"/>
+      <rect x="264" y="276" width="10" height="21" rx="5"/>
+      <rect x="250.5" y="318" width="11" height="25" rx="5.5"/>
+      <rect x="236" y="362" width="10" height="20" rx="5"/>
+      <rect x="266" y="362" width="10" height="20" rx="5"/>
+    </g>
+    <path d="M120 404 C150 398 180 400 210 404 H302 C332 400 362 398 392 402 V460 H120 Z" fill="#0C2546"/>
+    <path d="M118 416 C146 406 172 426 200 416 S256 406 284 416 S340 426 394 413" fill="none" stroke="#41C9B9" stroke-width="8.5" stroke-linecap="round"/>
+    <path d="M118 434 C146 424 172 444 200 434 S256 424 284 434 S340 444 394 431" fill="none" stroke="#41C9B9" stroke-width="8.5" stroke-linecap="round" opacity=".5"/>
+  </g>
+  <path d="M134 438 V262 C134 198 178 162 215 138 C239 123 252 106 256 80 C260 106 273 123 297 138 C334 162 378 198 378 262 V438 Z" fill="none" stroke="url(#gold)" stroke-width="13" stroke-linejoin="round"/>
+  <path transform="translate(322 176)" d="M0 6 C-2.6 1 -12 1 -12 9 C-12 16 -3.5 20 0 25 C3.5 20 12 16 12 9 C12 1 2.6 1 0 6 Z" fill="#F26A4F"/>
+</svg>

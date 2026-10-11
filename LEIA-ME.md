@@ -12,6 +12,18 @@ Esta versão substitui a v5. O roteiro é o mesmo (14 dias, 58 lugares, PT/EN/TR
 
 Também foi corrigido: pouso no IST às **11:15** e volta em **4/11** (voo 20:35). O dia 3/11 ficou livre (terça sem aulas) e o 4/11 traz o passo a passo até o aeroporto.
 
+## Novidades da versão 6.1 (11/10)
+
+- **Todos os dias de aula vocês vão juntos para a faculdade.** Nos dias 23, 26, 28, 30/10 e 2/11 o passeio sai da própria faculdade quando a aula termina, e a primeira parada é sempre comida (Hafız Mustafa logo depois da faculdade, Roll Pastry & Pitta etc.).
+- **Pelo menos 2h30 entre um lugar de comida e outro**: os horários se ajustam sozinhos.
+- 22/10: saiu a Cisterna Basílica; entrou o Old Hipodrom depois da Mesquita Azul, e o ingresso combinado de Ayasofya + Mesquita Azul aparece no dia.
+- 23/10: rota da faculdade até o Patriarcado de São Jorge (Fener), passando antes pelo Hafız Mustafa de Beyazıt.
+- Viyana Kahvesi Galata duas vezes: domingo 25/10 à tarde e segunda 26/10 à noite.
+- Roll Pastry & Pitta (o link que você mandou) na segunda 26/10, logo depois da aula.
+- Botão **"Ver no Google · fotos e avaliações"** em todos os lugares.
+- Chegada do IST ao Airbnb muito mais detalhada: placas, máquina do Istanbulkart passo a passo, sentido certo de cada trem, nome de cada parada e o que fazer se passar do ponto.
+- **Área privada com senha** nos dias 21, 22 e 28: o conteúdo que você pediu para proteger vai **criptografado** no site — quem abrir o GitHub não consegue ler sem a senha, e a senha não está escrita em nenhum arquivo. Depois de digitar a senha, ela vale até você fechar o app ou tocar em *Bloquear de novo* (em Guia).
+
 ## Atualizar o seu site no GitHub Pages
 
 1. Extraia o ZIP. Dentro da pasta `istanbul-a-dois-v6` estão `index.html`, `sw.js`, `app.js`, `data.js` e as pastas `img`, `map`, `fonts`, `icons`, `vendor`.

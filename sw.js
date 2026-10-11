@@ -1,5 +1,5 @@
 /* İstanbul · A dois — service worker (offline-first) */
-const CORE = 'ist-core-5d1d568096';
+const CORE = 'ist-core-6d1c270945';
 const MAP = 'ist-map-v1';           // filled by the app's "offline map" download; kept across updates
 const ASSETS = [
  "./",
