@@ -1,5 +1,5 @@
 /* İstanbul · A dois — service worker (offline-first) */
-const CORE = 'ist-core-6d1c270945';
+const CORE = 'ist-core-9f6417fe78';
 const MAP = 'ist-map-v1';           // filled by the app's "offline map" download; kept across updates
 const ASSETS = [
  "./",
@@ -25,6 +25,11 @@ const ASSETS = [
  "./img/akaretler.webp",
  "./img/antoine.webp",
  "./img/arasta.webp",
+ "./img/arr-m11.webp",
+ "./img/arr-m2.webp",
+ "./img/arr-sishane.webp",
+ "./img/arr-to-metro.webp",
+ "./img/arr-transfer.webp",
  "./img/balat.webp",
  "./img/beyazit.webp",
  "./img/beyzade.webp",

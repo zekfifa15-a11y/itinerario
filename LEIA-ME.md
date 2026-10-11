@@ -24,6 +24,17 @@ Também foi corrigido: pouso no IST às **11:15** e volta em **4/11** (voo 20:35
 - Chegada do IST ao Airbnb muito mais detalhada: placas, máquina do Istanbulkart passo a passo, sentido certo de cada trem, nome de cada parada e o que fazer se passar do ponto.
 - **Área privada com senha** nos dias 21, 22 e 28: o conteúdo que você pediu para proteger vai **criptografado** no site — quem abrir o GitHub não consegue ler sem a senha, e a senha não está escrita em nenhum arquivo. Depois de digitar a senha, ela vale até você fechar o app ou tocar em *Bloquear de novo* (em Guia).
 
+## Novidades da versão 6.2 (11/10)
+
+- **Hora de sair de casa em todos os trechos**: cada trecho mostra "Sair HH:MM → chega HH:MM", e ao abrir o trecho aparece o relógio de cada etapa (a pé até a estação, embarque, onde descer). Os horários usam o tempo real de cada rota (bonde, metrô, balsa, ônibus), não uma estimativa genérica.
+- **Acordar e sair**: no topo de cada dia aparece "Acordar · Sair". Nos dias de aula cedo há o cartão *Ida para a faculdade* com a hora de sair, o bonde T1 e a chegada antes da aula.
+- **Café da manhã**: nos dias sem aula de manhã o dia começa num café da manhã com nota 4,7 ou mais perto de casa ou do caminho; nos dias de aula, café em casa com a **lista de mercado** (dia 21 e Guia). Em *Lugares* há o filtro **Café da manhã**.
+- **Almoços e jantares com nota alta** (4,7+) em Sultanahmet, Gülhane, Ortaköy e Kadıköy.
+- **Istanbulkart**: o app calcula, com o seu roteiro, quanto carregar no aeroporto para os 7 primeiros dias e quanto recarregar depois (dia 21 e Guia).
+- **Chegada**: diagrama com todas as estações do M11 e do M2 em ordem, onde embarcar, onde trocar e onde descer, com horário aproximado, e **mapinhas de cada etapa**. No mapa do dia 21 o trajeto do aeroporto aparece com o nome de cada estação.
+- **Ida e volta separadas em todos os mapas**: cada linha corre do lado direito do sentido em que você anda, com setas; a volta tem outra cor (azul a pé, rosa no transporte).
+- 23/10 sem museu (saiu o İstanbul Modern).
+
 ## Atualizar o seu site no GitHub Pages
 
 1. Extraia o ZIP. Dentro da pasta `istanbul-a-dois-v6` estão `index.html`, `sw.js`, `app.js`, `data.js` e as pastas `img`, `map`, `fonts`, `icons`, `vendor`.
@@ -53,7 +64,7 @@ No Android: Chrome → ⋮ → **Instalar app**, e o mesmo teste.
 | Rotas planejadas do roteiro (a pé e transporte) | Atualizar o app quando houver versão nova |
 | "Ir agora" a pé, calculado no celular (Fatih, Beyoğlu, Beşiktaş, Üsküdar, Kadıköy) | |
 
-Limites honestos: as linhas de transporte mostram **o caminho**, não o horário — confira a frequência no dia, como antes. Fora da área central (por exemplo em Büyükada ou no aeroporto) o "Ir agora" usa a rota planejada ou uma linha reta indicativa. O cruzeiro de 30/10 continua sem ponto de embarque até você ter o voucher.
+Limites honestos: as linhas de transporte mostram **o caminho**, não o horário — confira a frequência no dia, como antes. Fora da área central (por exemplo em Büyükada ou no aeroporto) o "Ir agora" usa a rota planejada ou uma linha reta indicativa. Os horários de saída são calculados pelo trajeto e incluem alguns minutos para achar a plataforma; em hora de pico saia um pouco antes.
 
 ## Dicas de uso
 
