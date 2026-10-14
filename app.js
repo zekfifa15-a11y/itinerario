@@ -203,7 +203,7 @@ function rebuildPlaces() {
 rebuildPlaces();
 const ASIAN = new Set(TRIP.asian);
 const EXPLICIT = new Set(TRIP.explicit);
-const photoURL = id => { const pid = (PL[id] && PL[id].photoOf) || id; return (TRIP.photos[pid] && TRIP.photos[pid].img) ? `./img/${pid}.webp` : null; };
+const photoURL = id => { const pid = (PL[id] && PL[id].photoOf) || id, ph = TRIP.photos[pid]; return ph && ph.img ? (ph.data || `./img/${pid}.webp`) : null; };
 const kindLabel = p => p.kind === 'food' ? t('kFood') : p.kind === 'shop' ? t('kShop') : p.kind === 'transport' ? t('kTransport') : p.kind === 'base' ? t('kBase') : t('kSight');
 const kindIcon = p => p.kind === 'food' ? 'food' : p.kind === 'shop' ? 'shop' : p.kind === 'transport' ? 'ferry' : p.church ? 'church' : p.id === 'base' ? 'home' : p.id === 'university' ? 'cap' : 'star';
 const phHTML = (id, cls = '') => { const u = photoURL(id); const p = PL[id] || {}; return `<div class="ph ${cls}">${u ? `<img src="${u}" alt="" loading="lazy" decoding="async">` : ic(kindIcon(p))}</div>`; };
@@ -1003,7 +1003,7 @@ const Vault = {
     } catch (e) { return false; } finally { this.busy = false; }
   },
   apply(P) {
-    Object.assign(TRIP.places, P.places || {}); Object.assign(TRIP.info, P.info || {}); Object.assign(ROUTES, P.routes || {});
+    Object.assign(TRIP.places, P.places || {}); Object.assign(TRIP.info, P.info || {}); Object.assign(ROUTES, P.routes || {}); Object.assign(TRIP.photos, P.photos || {});
     rebuildPlaces();
     if (P.day28) { const i = DAYS.findIndex(d => d.id === P.day28.id); if (i >= 0) DAYS[i] = P.day28; const j = TRIP.days.findIndex(d => d.id === P.day28.id); if (j >= 0) TRIP.days[j] = P.day28; }
     for (const b of P.breaks || []) if (!TRIP.breaks.some(x => x.id === b.id)) TRIP.breaks.push(b);
