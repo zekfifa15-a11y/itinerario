@@ -447,3 +447,29 @@ table.kt tr.tot td{font-weight:800;border-bottom:0;background:var(--paper-2)}
 .st-dot{width:9px;height:9px;border-radius:50%;background:#fff;border:2.5px solid #5B6577}
 .mk.ist{background:#0E2647;font-size:16px;width:34px;height:34px;border-radius:12px}
 .legsteps .legsteps{display:grid;margin:0;gap:5px}
+/* ---------- tickets ---------- */
+.ticket{display:flex;margin-top:14px;border-radius:18px;background:linear-gradient(135deg,color-mix(in srgb,var(--gold) 16%,var(--card)),var(--card) 60%);border:1.5px solid color-mix(in srgb,var(--gold) 55%,transparent);box-shadow:var(--shadow);position:relative;overflow:hidden}
+.ticket .tk-l{flex:none;width:74px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px 6px;background:var(--gold);color:#2A1C05;position:relative}
+.ticket .tk-l::after{content:"";position:absolute;right:-1px;top:8px;bottom:8px;border-right:3px dotted var(--card)}
+.ticket::before,.ticket::after{content:"";position:absolute;left:62px;width:22px;height:22px;border-radius:50%;background:var(--paper);border:1.5px solid color-mix(in srgb,var(--gold) 55%,transparent);z-index:1}
+.ticket::before{top:-12px} .ticket::after{bottom:-12px}
+.tk-star{font-size:26px;line-height:1;color:#FFF3C4;text-shadow:0 1px 0 rgba(0,0,0,.25)}
+.tk-d{display:flex;flex-direction:column;align-items:center;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+.tk-d b{font-family:var(--serif);font-size:24px;line-height:1.05}
+.ticket .tk-r{flex:1;min-width:0;padding:13px 14px 12px 18px}
+.tk-k{font-size:11px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--gold)}
+.ticket h3{font-family:var(--serif);font-size:19px;margin:3px 0 2px;line-height:1.2}
+.tk-when{font-family:var(--mono);font-size:12.5px;font-weight:800;color:var(--ink-2)}
+.ticket p{font-size:13px;line-height:1.45;margin:6px 0 0}
+.tk-res{margin-top:10px;padding-top:10px;border-top:1.5px dashed color-mix(in srgb,var(--gold) 45%,transparent)}
+.qrs{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:8px 0 2px}
+.qrs figure{margin:0;padding:8px;background:#fff;border-radius:12px;border:1px solid var(--line);text-align:center}
+.qrs img{display:block;width:132px;height:132px;image-rendering:pixelated}
+.qrs figcaption{font-size:10.5px;font-weight:800;color:#3D4557;margin-top:4px;font-family:var(--mono)}
+.tkbadge{font-size:10px;font-weight:800;letter-spacing:.5px;padding:2px 7px;border-radius:7px;background:var(--gold);color:#2A1C05}
+.date .tk{font-style:normal;position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);font-size:10px;line-height:1;padding:2px 5px;border-radius:7px;background:var(--gold);color:#FFF3C4;border:2px solid var(--paper)}
+.date .lk+.lk{left:19px}
+.tk-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.tk-row .tk-star{font-size:20px;color:var(--gold);text-shadow:none}
+.tk-row div{flex:1;min-width:0} .tk-row b{display:block;font-size:13.5px} .tk-row small{font-size:12px;color:var(--muted);font-weight:600}
+.ticket .tk-l{justify-content:flex-start;padding-top:20px}

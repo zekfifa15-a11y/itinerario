@@ -21,7 +21,7 @@ Também foi corrigido: pouso no IST às **11:15** e volta em **4/11** (voo 20:35
 - Viyana Kahvesi Galata duas vezes: domingo 25/10 à tarde e segunda 26/10 à noite.
 - Roll Pastry & Pitta (o link que você mandou) na segunda 26/10, logo depois da aula.
 - Botão **"Ver no Google · fotos e avaliações"** em todos os lugares.
-- Chegada do IST ao Airbnb muito mais detalhada: placas, máquina do Istanbulkart passo a passo, sentido certo de cada trem, nome de cada parada e o que fazer se passar do ponto.
+- Chegada do IST ao Airbnb e volta ao IST (4/11), as duas de metrô, muito detalhadas: placas, máquina do Istanbulkart passo a passo, sentido certo de cada trem, nome de cada parada e o que fazer se passar do ponto.
 - **Área privada com senha** nos dias 21, 22 e 28: o conteúdo que você pediu para proteger vai **criptografado** no site — quem abrir o GitHub não consegue ler sem a senha, e a senha não está escrita em nenhum arquivo. Depois de digitar a senha, ela vale até você fechar o app ou tocar em *Bloquear de novo* (em Guia).
 
 ## Novidades da versão 6.2 (11/10)

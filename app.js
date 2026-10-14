@@ -90,14 +90,15 @@ const I = {
   vaultOk: ['Área privada aberta', 'Private area unlocked', 'Özel alan açıldı'], vaultLock: ['Bloquear de novo', 'Lock again', 'Tekrar kilitle'],
   vaultNoCrypto: ['Abra o app pelo endereço https para usar a senha.', 'Open the app over https to use the password.', 'Şifre için uygulamayı https ile açın.'],
   resT: ['RESERVA', 'BOOKING', 'REZERVASYON'], waMsg: ['Mensagem pronta para copiar', 'Ready-to-send message', 'Hazır mesaj'],
-  leaveHomeT: ['Sair de casa', 'Leave home', 'Evden çıkış'], wakeT: ['Acordar', 'Wake up', 'Kalkış'], leaveT: ['Sair', 'Leave', 'Çık'], arrT: ['chega', 'arrive', 'varış'],
+  tkHas: ['Hoje tem ingresso', 'Ticket today', 'Bugün biletli'], tkBadge: ['INGRESSO', 'TICKET', 'BİLET'], tkAllT: ['Ingressos e reservas', 'Tickets & bookings', 'Biletler ve rezervasyonlar'], tkCode: ['Código e QR na área com senha', 'Code and QR in the password area', 'Kod ve QR şifreli alanda'], tkShow: ['Mostre o QR na entrada', 'Show the QR at the entrance', 'Girişte QR’ı gösterin'], tkSee: ['Ver o dia', 'See the day', 'Günü gör'],
+  leaveHomeT: ['Sair de casa', 'Leave home', 'Evden çıkış'], restT: ['Pausa no Airbnb', 'Break at the Airbnb', 'Airbnb’de mola'], restTxt: ['descansar e sair de novo', 'rest and head out again', 'dinlenip yeniden çıkış'], wakeT: ['Acordar', 'Wake up', 'Kalkış'], leaveT: ['Sair', 'Leave', 'Çık'], arrT: ['chega', 'arrive', 'varış'],
   boardT: ['embarque', 'board', 'bin'], alightT: ['desça', 'get off', 'in'], bfHome: ['café da manhã em casa', 'breakfast at home', 'evde kahvaltı'], bfOut: ['café da manhã fora', 'breakfast out', 'dışarıda kahvaltı'],
   commuteT: ['Ida para a faculdade (vocês dois)', 'To the faculty (both of you)', 'Fakülteye gidiş (ikiniz)'],
   commuteTxt: ['Já inclui 10 min de folga para o bonde cheio de manhã e 10 min para chegar à sala antes das {c}. Café da manhã em casa (lista de mercado no dia 21).', 'Includes 10 min of slack for the packed morning tram and 10 min to reach the classroom before {c}. Breakfast at home (grocery list on 21 Oct).', 'Sabah kalabalık tramvay için 10 dk pay ve {c} öncesi sınıfa varmak için 10 dk dahil. Kahvaltı evde (market listesi 21 Ekim’de).'],
   classAt: ['aula', 'class', 'ders'], fBreakfast: ['Café da manhã', 'Breakfast', 'Kahvaltı'],
   idaT: ['Ida', 'Outbound', 'Gidiş'], voltaT: ['Volta', 'Return', 'Dönüş'], walkS: ['a pé', 'walk', 'yürüyüş'], rideS: ['transporte', 'transit', 'ulaşım'],
   stepMap: ['Ver no mapa', 'See on map', 'Haritada gör'], lineDiag: ['Estações em ordem — confira o nome na placa', 'Stations in order — check the name on the sign', 'Sırasıyla duraklar — tabeladaki adı kontrol edin'],
-  boardHere: ['EMBARQUE AQUI', 'BOARD HERE', 'BURADAN BİN'], changeHere: ['DESÇA E TROQUE → M2', 'GET OFF, CHANGE → M2', 'İN, AKTARMA → M2'], offHere: ['DESÇA AQUI', 'GET OFF HERE', 'BURADA İN'], dontOff: ['não desça', 'stay on', 'inme'],
+  boardHere: ['EMBARQUE AQUI', 'BOARD HERE', 'BURADAN BİN'], changeHere: ['DESÇA E TROQUE → {l}', 'GET OFF, CHANGE → {l}', 'İN, AKTARMA → {l}'], transferSigns: ['baldeação: siga as placas “{x}”', 'transfer: follow the “{x}” signs', 'aktarma: “{x}” tabelalarını izleyin'], walkToSt: ['a pé até a estação {x}', 'walk to {x} station', '{x} istasyonuna yürüyüş'], offHere: ['DESÇA AQUI', 'GET OFF HERE', 'BURADA İN'], dontOff: ['não desça', 'stay on', 'inme'],
   stopOf: ['parada {i} de {n}', 'stop {i} of {n}', '{n} duraktan {i}.'], walkTo: ['a pé até o Airbnb', 'walk to the Airbnb', 'Airbnb’ye yürüyüş'],
   kartT: ['Istanbulkart: quanto carregar', 'Istanbulkart: how much to load', 'İstanbulkart: ne kadar yüklenmeli'], kartLoad: ['Carregue no aeroporto', 'Load at the airport', 'Havalimanında yükleyin'],
   kartHow: ['Na máquina amarela (Biletmatik) da estação M11: 1) compre o cartão ({card}); 2) toque em “Bakiye yükle/Top up”, encoste o cartão e coloque {load}. Total em dinheiro: {total}. A máquina não dá troco — leve notas que somem exatamente isso.', 'At the yellow machine (Biletmatik) in the M11 station: 1) buy the card ({card}); 2) tap “Bakiye yükle/Top up”, hold the card on the reader and insert {load}. Total cash: {total}. The machine gives no change — bring notes that add up exactly.', 'M11 istasyonundaki sarı makinede (Biletmatik): 1) kartı alın ({card}); 2) “Bakiye yükle”ye dokunun, kartı okutun ve {load} yükleyin. Toplam nakit: {total}. Makine para üstü vermez — tam tutarda banknot getirin.'],
@@ -314,7 +315,13 @@ function schedule(day) {
     const pick = (g && cs.find(c => c.id === g)) || first || pool[0];
     if (pick.p.kind === 'food') lastFood = pick.st;
     unknown = unknown || !!pick.p.unmapped || !!pick.inf.reservation;
-    out.push({ id: pick.id, time: unknown ? '—' : fmtHM(pick.st), dur: pick.inf.duration, leave: unknown ? undefined : fmtHM(pick.st - pick.tr), tr: pick.tr });
+    // a long wait close to home → go back to the Airbnb and leave again at the right time
+    let via;
+    if (!unknown && PL.base && pick.wait >= 90 && cur.id !== 'base' && pick.id !== 'base' && !day.noHome) {
+      const t1 = travelMin(cur, PL.base), t2 = travelMin(PL.base, pick.p), aH = tm + t1, lH = pick.st - t2;
+      if (t1 <= 40 && t2 <= 40 && lH - aH >= 30) via = { arr: fmtHM(aH), leave: fmtHM(lH), from: fmtHM(tm) };
+    }
+    out.push({ id: pick.id, time: unknown ? '—' : fmtHM(pick.st), dur: pick.inf.duration, leave: unknown ? undefined : via ? via.leave : fmtHM(pick.st - pick.tr), tr: pick.tr, via });
     tm = pick.st + pick.inf.duration; cur = pick.p; rest.splice(rest.indexOf(pick.id), 1);
   }
   const back = travelMin(cur, PL[day.end]);
@@ -333,7 +340,7 @@ function legMode(a, b) {
   return cross || coast || hist || hav(a, b) > 2 ? 'transit' : 'walking';
 }
 function legsOf(day, stops) {
-  const ids = [day.start, ...stops.map(s => s.id), day.end];
+  const ids = [day.start, ...stops.flatMap(s => s.via ? ['base', s.id] : [s.id]), day.end];
   const out = [];
   for (let i = 1; i < ids.length; i++) { const a = PL[ids[i - 1]], b = PL[ids[i]]; if (!a || !b || a.id === b.id) continue; out.push({ from: a.id, to: b.id, mode: legMode(a, b), key: `${a.id}__${b.id}` }); }
   return out;
@@ -631,6 +638,7 @@ function mapStyle(dark) {
 const IST_BOX = { s: 40.80, n: 41.36, w: 28.45, e: 29.45 };
 const inIstanbul = p => p && p.lat > IST_BOX.s && p.lat < IST_BOX.n && p.lng > IST_BOX.w && p.lng < IST_BOX.e;
 /* the leg that closes a day (back home / back to the faculty) is the 'volta' */
+const isAir = k => k === 'ist__base' || k === 'base__ist';
 const markBack = (day, legs) => legs.map((l, i) => ({ ...l, v: i === legs.length - 1 && l.to === day.end && legs.length > 1 ? 1 : 0 }));
 const MapView = {
   map: null, ready: false, failed: false, markers: [], extra: [], ctx: null, sel: null, follow: false, dark: false, pending: null,
@@ -721,6 +729,7 @@ const MapView = {
     const brk = TRIP.breaks.filter(b => b.date === day.date).map(b => ({ b, sc: schedule(b) }));
     const legs = markBack(day, legsOf(day, sc.stops));
     if (day.date === '2026-10-21') legs.unshift({ from: 'ist', to: 'base', key: 'ist__base', mode: 'transit', v: 0 });
+    if (day.departure) legs.push({ from: 'base', to: 'ist', key: 'base__ist', mode: 'transit', v: 1 });
     let stops = sc.stops;
     if (c.type === 'leg') return { stops, legs, focus: c.key, numbered: true, extra: ['base'], day, brk };
     return { stops, legs, numbered: true, extra: ['base'].concat(brk.length ? ['university'] : []), day, brk };
@@ -731,7 +740,7 @@ const MapView = {
     const feats = [];
     const addRoute = (key, faded, v) => {
       let r;
-      if (key === 'ist__base') r = ROUTES.ist__base; else { const [a, b] = key.split('__'); if (!PL[a] || !PL[b]) return; r = legRoute(PL[a], PL[b]); }
+      if (isAir(key)) r = ROUTES[key]; else { const [a, b] = key.split('__'); if (!PL[a] || !PL[b]) return; r = legRoute(PL[a], PL[b]); }
       if (!r) return;
       r.segs.forEach((s, i) => feats.push({ type: 'Feature', properties: { k: s.m === 'walk' ? 'walk' : 'ride', f: faded || (md.seg !== undefined && i !== md.seg) ? 1 : 0, v: v ? 1 : 0 }, geometry: { type: 'LineString', coordinates: s.c } }));
       return r;
@@ -761,16 +770,17 @@ const MapView = {
     }
     // transit stations on the visible legs
     const seen = new Set();
-    const stLegs = md.legs.map(l => l.key === 'ist__base' ? null : (ROUTES[l.key] && ROUTES[l.key].mode === 'transit' ? ROUTES[l.key] : null)).filter(Boolean);
-    if (md.legs.some(l => l.key === 'ist__base') && TRIP.arrLine) {
-      // airport → Airbnb: every station is named and numbered, the three that matter are flagged
-      const LX = TRIP.arrLine, p0 = LX[0].st[0].c;
-      this.markers.push(new maplibregl.Marker({ element: mkEl('✈', 'mk ist') }).setLngLat(p0).addTo(this.map));
+    const stLegs = md.legs.map(l => isAir(l.key) ? null : (ROUTES[l.key] && ROUTES[l.key].mode === 'transit' ? ROUTES[l.key] : null)).filter(Boolean);
+    for (const al of md.legs.filter(l => isAir(l.key))) {
+      // airport ⇄ Airbnb: every station is named and numbered, the three that matter are flagged
+      const LX = al.key === 'ist__base' ? TRIP.arrLine : TRIP.depLine; if (!LX) continue;
+      const ap = al.key === 'ist__base' ? LX[0].st[0].c : LX[LX.length - 1].st[LX[LX.length - 1].st.length - 1].c;
+      this.markers.push(new maplibregl.Marker({ element: mkEl('✈', 'mk ist') }).setLngLat(ap).addTo(this.map));
       LX.forEach((ln, li) => ln.st.forEach((st, i) => {
-        const n = ln.st.length - 1, nm = esc(ST_NAME[st.n] || st.n);
-        if (li === 1 && i === 0) return; // Gayrettepe is shown once, with the transfer
-        const role = i === 0 ? 'board' : i === n ? (li === 0 ? 'change' : 'off') : 'mid';
-        const html = role === 'mid' ? `<i>${i}</i>${nm}` : `<b>${ln.line}${li === 0 && i === n ? ' → M2' : ''}</b> ${nm}<em>${esc(role === 'board' ? t('boardHere') : role === 'change' ? t('changeHere') : t('offHere'))}</em>`;
+        const n = ln.st.length - 1, nm = esc(ST_NAME[st.n] || st.n), nxt = LX[li + 1];
+        if (li > 0 && i === 0) return; // the transfer station is shown once
+        const role = i === 0 ? 'board' : i === n ? (nxt ? 'change' : 'off') : 'mid';
+        const html = role === 'mid' ? `<i>${i}</i>${nm}` : `<b>${ln.line}${nxt && i === n ? ' → ' + nxt.line : ''}</b> ${nm}<em>${esc(role === 'board' ? t('boardHere') : role === 'change' ? t('changeHere', { l: nxt.line }) : t('offHere'))}</em>`;
         const el = mkEl(html, `st-pin metro ${role} ${ln.line}`);
         this.markers.push(new maplibregl.Marker({ element: el, anchor: role === 'mid' ? (i % 2 ? 'left' : 'right') : 'bottom', offset: role === 'mid' ? [i % 2 ? 8 : -8, 0] : [0, -6] }).setLngLat(st.c).addTo(this.map));
         if (role === 'mid') { const dot = mkEl('', 'st-dot'); this.markers.push(new maplibregl.Marker({ element: dot }).setLngLat(st.c).addTo(this.map)); }
@@ -790,12 +800,12 @@ const MapView = {
     const md = this.md || this.model(); const pts = [];
     const add = p => { if (p && !p.unmapped) pts.push([p.lng, p.lat]); };
     if (md.focus) { const [a, b] = md.focus.split('__'); const r = legRoute(PL[a], PL[b]); r.segs.forEach(s => s.c.forEach(c => pts.push(c))); }
-    else if (this.ctx && this.ctx.type === 'route') { const r = this.ctx.key === 'ist__base' ? ROUTES.ist__base : legRoute(PL[this.ctx.key.split('__')[0]], PL[this.ctx.key.split('__')[1]]); r.segs.forEach((s, i) => { if (md.seg === undefined || i === md.seg) s.c.forEach(c => pts.push(c)); }); }
-    else { md.stops.forEach(s => add(PL[s.id])); (md.extra || []).forEach(id => add(PL[id])); if (md.brk) md.brk.forEach(({ sc }) => sc.stops.forEach(s => add(PL[s.id]))); if (md.legs.some(l => l.key === 'ist__base') && !S.steps['arr:sishane']) ROUTES.ist__base.segs.forEach(s => s.c.forEach(c => pts.push(c))); }
+    else if (this.ctx && this.ctx.type === 'route') { const r = isAir(this.ctx.key) ? ROUTES[this.ctx.key] : legRoute(PL[this.ctx.key.split('__')[0]], PL[this.ctx.key.split('__')[1]]); r.segs.forEach((s, i) => { if (md.seg === undefined || i === md.seg) s.c.forEach(c => pts.push(c)); }); }
+    else { md.stops.forEach(s => add(PL[s.id])); (md.extra || []).forEach(id => add(PL[id])); if (md.brk) md.brk.forEach(({ sc }) => sc.stops.forEach(s => add(PL[s.id]))); for (const al of md.legs.filter(l => isAir(l.key) && !(l.key === 'ist__base' && S.steps['arr:sishane']))) ROUTES[al.key].segs.forEach(s => s.c.forEach(c => pts.push(c))); }
     if (!pts.length) return;
     const b = pts.reduce((bb, c) => bb.extend(c), new maplibregl.LngLatBounds(pts[0], pts[0]));
     const sheetH = $('#mapSheet').hidden ? 0 : Math.min($('#mapSheet').offsetHeight, innerHeight * 0.4);
-    const ist = md.legs && md.legs.some(l => l.key === 'ist__base') && md.seg === undefined;
+    const ist = md.legs && md.legs.some(l => isAir(l.key)) && md.seg === undefined;
     this.map.fitBounds(b, { padding: { top: ist ? 150 : 96, bottom: 64 + sheetH + (pad || 0), left: ist ? 110 : 36, right: 72 }, maxZoom: 16.5, duration: 600 });
   },
   renderTop() {
@@ -803,7 +813,7 @@ const MapView = {
     let title = '', sub = '';
     if (c.type === 'all' || c.type === 'place') { title = t('allPlaces'); sub = `${Object.values(PL).filter(p => !p.unmapped && p.kind !== 'base').length} · ${t('longPress')}`; }
     else if (c.type === 'circuit') { const cc = TRIP.circuits.find(x => x.id === c.id); title = L(cc.title); sub = `${t('tabIntervalo')} · ${t('faculty')}`; }
-    else if (c.type === 'route') { title = c.key === 'ist__base' ? L(TRIP.guide.arrTitle) : t('facT'); sub = c.key === 'ist__base' ? (c.seg === undefined ? 'M11 → M2 → Şişhane' : ['M11 · İstanbul Havalimanı → Gayrettepe', 'Gayrettepe · M11 → M2', 'M2 · Gayrettepe → Şişhane', 'Şişhane → Airbnb'][c.seg]) : c.key === 'base__university' ? 'T1 Karaköy → Laleli–Üniversite' : c.key === 'university__base' ? 'T1 Laleli–Üniversite → Karaköy' : ''; }
+    else if (c.type === 'route') { title = c.key === 'ist__base' ? L(TRIP.guide.arrTitle) : c.key === 'base__ist' ? L(TRIP.guide.depTitle) : t('facT'); sub = c.key === 'base__ist' ? (c.seg === undefined ? 'Şişhane → M2 → M11 → IST' : ['Airbnb → Şişhane', 'M2 · Şişhane → Gayrettepe', 'Gayrettepe · M2 → M11', 'M11 · Gayrettepe → İstanbul Havalimanı'][c.seg]) : c.key === 'ist__base' ? (c.seg === undefined ? 'M11 → M2 → Şişhane' : ['M11 · İstanbul Havalimanı → Gayrettepe', 'Gayrettepe · M11 → M2', 'M2 · Gayrettepe → Şişhane', 'Şişhane → Airbnb'][c.seg]) : c.key === 'base__university' ? 'T1 Karaköy → Laleli–Üniversite' : c.key === 'university__base' ? 'T1 Laleli–Üniversite → Karaköy' : ''; }
     else { const d = dayById(c.dayId) || currentDay(); title = L(d.title).startsWith(dayLabel(d)) ? L(d.title) : `${dayLabel(d)} · ${L(d.title)}`; sub = fmtDate(d.date, { weekday: 'long', day: 'numeric', month: 'long' }); }
     $('#mapTop').innerHTML = `<div class="ctx">
       <button class="btn icon" data-act="map-prev" aria-label="prev">${ic('chevL')}</button>
@@ -841,9 +851,10 @@ const MapView = {
   legSheet(ctx) {
     let r, a, b;
     if (ctx.key === 'ist__base') { r = ROUTES.ist__base; a = { name: 'IST' }; b = PL.base; }
+    else if (ctx.key === 'base__ist') { r = ROUTES.base__ist; a = PL.base; b = { name: 'IST' }; }
     else { [a, b] = ctx.key.split('__').map(id => PL[id]); r = legRoute(a, b); }
     const sh = $('#mapSheet'); sh.hidden = false;
-    sh.innerHTML = `<div class="nav-card"><div style="display:flex;align-items:center;gap:8px"><div><div class="eyebrow">${esc(r.mode === 'walk' ? t('walk') : t('transit'))} · ${fmtDist(r.d)} · ~${fmtMin(r.est || r.segs.reduce((x, s) => x + (SPEED[s.m] ? segMin(s) : 0), 0))}</div><b style="font-family:var(--serif);font-size:18px">${esc(a.name)} → ${esc(b.name)}</b></div><button class="btn icon x" style="margin-left:auto" data-act="sheet-close">${ic('x')}</button></div>${UI.legSteps(r)}${ctx.key !== 'ist__base' && a.lat ? `<div class="links" style="margin-top:10px"><a href="${esc(googleDir(a, b, r.mode === 'walk' ? 'walking' : 'transit'))}" target="_blank" rel="noopener">${ic('ext', 's')} Google Maps</a></div>` : ''}</div>`;
+    sh.innerHTML = `<div class="nav-card"><div style="display:flex;align-items:center;gap:8px"><div><div class="eyebrow">${esc(r.mode === 'walk' ? t('walk') : t('transit'))} · ${fmtDist(r.d)} · ~${fmtMin(r.est || r.segs.reduce((x, s) => x + (SPEED[s.m] ? segMin(s) : 0), 0))}</div><b style="font-family:var(--serif);font-size:18px">${esc(a.name)} → ${esc(b.name)}</b></div><button class="btn icon x" style="margin-left:auto" data-act="sheet-close">${ic('x')}</button></div>${UI.legSteps(r)}${!isAir(ctx.key) && a.lat ? `<div class="links" style="margin-top:10px"><a href="${esc(googleDir(a, b, r.mode === 'walk' ? 'walking' : 'transit'))}" target="_blank" rel="noopener">${ic('ext', 's')} Google Maps</a></div>` : ''}</div>`;
   },
   closeSheet(silent) { const sh = $('#mapSheet'); sh.hidden = true; sh.innerHTML = ''; this.sel = null; $$('.mk.sel').forEach(m => m.classList.remove('sel')); if (!silent && Nav.active) Nav.renderSheet(); },
   step(dir) {
@@ -996,6 +1007,7 @@ const Vault = {
     rebuildPlaces();
     if (P.day28) { const i = DAYS.findIndex(d => d.id === P.day28.id); if (i >= 0) DAYS[i] = P.day28; const j = TRIP.days.findIndex(d => d.id === P.day28.id); if (j >= 0) TRIP.days[j] = P.day28; }
     for (const b of P.breaks || []) if (!TRIP.breaks.some(x => x.id === b.id)) TRIP.breaks.push(b);
+    TRIP.guide.tickets = TRIP.guide.tickets || []; for (const tk of P.tickets || []) if (!TRIP.guide.tickets.some(x => x.date === tk.date)) TRIP.guide.tickets.push(tk);
     this.data = P; this.unlocked = true;
   },
   lock() { try { sessionStorage.removeItem('ist-vault'); } catch (e) { } location.reload(); },
@@ -1036,7 +1048,8 @@ const Kart = {
   day(d) {
     const segs = [], ci = classInfo(d.date), legs = (x, sc) => { for (const l of legsOf(x, sc.stops)) if (l.mode === 'transit') segs.push(...this.rides(ROUTES[l.key])); };
     if (d.date === '2026-10-21') segs.push(...this.rides(ROUTES.ist__base));
-    if (ci.classes.length && !d.departure && !ci.arrival) { segs.push(...this.rides(ROUTES.base__university)); if (d.start !== 'university') segs.push(...this.rides(ROUTES.university__base)); }
+    if (d.departure) segs.push(...this.rides(ROUTES.base__ist));
+    if (ci.classes.length && !d.departure && !ci.arrival) { segs.push(...this.rides(ROUTES.base__university)); if (d.start !== 'university' && d.commuteBack !== false) segs.push(...this.rides(ROUTES.university__base)); }
     legs(d, schedule(d));
     for (const b of TRIP.breaks.filter(b => b.date === d.date)) legs(b, schedule(b));
     return { d, n: segs.length, tl: segs.reduce((x, s) => x + this.fare(s), 0), lines: segs.map(s => s.m === 'ferry' ? '⛴' : s.m === 'bus' ? '🚌' : s.line) };
@@ -1048,6 +1061,8 @@ const Kart = {
     return { rows, n7: cnt(f7), s7, load, all, nAll: cnt(rows), rest: Math.max(0, Math.ceil((all * 1.1 - load) / 50) * 50), card: TRIP.guide.fares.card };
   },
 };
+const ticketOf = date => (TRIP.guide.tickets || []).find(x => x.date === date);
+const ticketPlace = (date, id) => { const tk = ticketOf(date); return !!tk && tk.places.includes(id); };
 const fmtTL = (n, dec = 2) => n.toLocaleString(LOC[LANG], { minimumFractionDigits: dec, maximumFractionDigits: dec }) + ' TL';
 const ARR_SEG = { 'to-metro': 0, istanbulkart: 0, m11: 0, transfer: 1, m2: 2, sishane: 3 };
 const ST_NAME = { 'Şişli': 'Şişli-Mecidiyeköy' };
@@ -1086,7 +1101,7 @@ const UI = {
     const dates = DAYS.map(x => {
       const xs = schedule(x).stops, alld = xs.length && xs.every(s => S.done[s.id]);
       const cls = classInfo(x.date).classes.length;
-      return `<button type="button" class="date ${x.id === d.id ? 'on' : ''} ${alld ? 'alldone' : ''}" data-act="day" data-day="${x.id}" aria-pressed="${x.id === d.id}"><span class="marks">${x.locked ? '<i class="lk">🔒</i>' : ''}${x.special ? '<i class="lk">🎂</i>' : ''}${cls ? '<i class="mk class"></i>' : ''}${x.date === todayISO() ? '<i class="mk today"></i>' : ''}</span><span class="wd">${esc(fmtDate(x.date, { weekday: 'short' }).replace('.', ''))}</span><span class="dn">${fmtDate(x.date, { day: 'numeric' })}</span><span class="mo">${esc(fmtDate(x.date, { month: 'short' }).replace('.', ''))}</span></button>`;
+      return `<button type="button" class="date ${x.id === d.id ? 'on' : ''} ${alld ? 'alldone' : ''}" data-act="day" data-day="${x.id}" aria-pressed="${x.id === d.id}"><span class="marks">${x.locked ? '<i class="lk">🔒</i>' : ''}${x.special ? '<i class="lk">🎂</i>' : ''}${cls ? '<i class="mk class"></i>' : ''}${x.date === todayISO() ? '<i class="mk today"></i>' : ''}</span>${ticketOf(x.date) ? '<i class="tk">★</i>' : ''}<span class="wd">${esc(fmtDate(x.date, { weekday: 'short' }).replace('.', ''))}</span><span class="dn">${fmtDate(x.date, { day: 'numeric' })}</span><span class="mo">${esc(fmtDate(x.date, { month: 'short' }).replace('.', ''))}</span></button>`;
     }).join('');
     const brks = TRIP.breaks.filter(b => b.date === d.date);
     const clk = dayClock(d, sc);
@@ -1104,7 +1119,9 @@ const UI = {
       <p class="note">${esc(L(d.note))}</p>
       <div class="card trip-prog"><div style="flex:1"><b>${doneN} / ${totalPl.size}</b> <small>${esc(t('tripProg'))}</small><div class="bar" style="margin-top:7px"><i style="width:${totalPl.size ? doneN / totalPl.size * 100 : 0}%"></i></div></div><button class="btn sm" data-act="map-day" data-day="${d.id}">${ic('map', 's')}${esc(t('mapBtn'))}</button></div>`;
     if (Vault.has() && !Vault.unlocked && Vault.dates().includes(d.date)) h += this.lockCard(false);
-    for (const r of Vault.reservations(d.date)) h += this.reservationCard(r);
+    const tk = ticketOf(d.date), rs = Vault.reservations(d.date);
+    if (tk) h += this.ticketCard(tk, rs[0], sc);
+    for (const r of tk ? rs.slice(1) : rs) h += this.reservationCard(r);
     const early = d.date === '2026-10-21' ? brks : [];
     if (d.date === '2026-10-21') { h += this.arrivalCard(); for (const b of early) h += this.breakCard(b); h += this.groceryCard(); }
     const gf = Vault.gifts(d.date); if (gf) h += this.giftsCard(gf);
@@ -1136,13 +1153,20 @@ const UI = {
     if (!all.length) h += `<li class="empty">${esc(t('freeDay'))}</li>`;
     all.forEach((s, i) => {
       if (S.done[s.id]) return;
-      const leg = legs.find(l => l.to === s.id && l.from === (i ? all[i - 1].id : d.start));
-      const prevHidden = i > 0 && S.done[all[i - 1].id];
-      if (leg) h += this.legRow(leg, d, prevHidden, { leave: s.leave, arr: s.time });
+      const prevId = i ? all[i - 1].id : d.start, prevHidden = i > 0 && S.done[all[i - 1].id];
+      if (s.via) {
+        const l1 = legs.find(l => l.from === prevId && l.to === 'base'), l2 = legs.find(l => l.from === 'base' && l.to === s.id);
+        if (l1) h += this.legRow(l1, d, prevHidden, { leave: s.via.from, arr: s.via.arr });
+        h += `<li class="node mid"><span class="pin">${ic('home', 's')}</span><span class="lbl">${esc(t('restT'))}<small>${esc(t('restTxt'))}</small></span><span class="t">${s.via.arr}–${s.via.leave}</span></li>`;
+        if (l2) h += this.legRow(l2, d, false, { leave: s.via.leave, arr: s.time });
+      } else {
+        const leg = legs.find(l => l.to === s.id && l.from === prevId);
+        if (leg) h += this.legRow(leg, d, prevHidden, { leave: s.leave, arr: s.time });
+      }
       h += this.stopCard(PL[s.id], s, i + 1, d, s.id === nextId);
     });
     const lastLeg = legs[legs.length - 1];
-    if (lastLeg && all.length) h += this.legRow(lastLeg, d, S.done[lastLeg.from], { leave: sc.returnLeave, arr: sc.returnTime, back: true });
+    if (lastLeg && all.length && lastLeg.from === all[all.length - 1].id) h += this.legRow(lastLeg, d, S.done[lastLeg.from], { leave: sc.returnLeave, arr: sc.returnTime, back: true });
     if (all.length || d.start !== d.end) h += `<li class="node end"><span class="pin">${ic(d.end === 'university' ? 'cap' : 'home', 's')}</span><span class="lbl">${esc(d.end === 'university' ? t('gate') : t('back'))}<small>${esc(d.endDeadline ? d.endDeadline + ' · limite' : (PL[d.end] || {}).name || '')}</small></span><span class="t">${sc.returnTime ? '~' + sc.returnTime : ''}</span></li>`;
     h += '</ol>';
     if (sc.skipped && sc.skipped.length) h += `<div class="callout" style="margin-top:10px">${ic('info')}<div>${sc.skipped.map(x => `<div><strong>${esc(PL[x.id].name)}</strong> — ${esc(x.reason === 'closed' ? t('closedDay') : x.reason === 'deadline' ? t('deadline') : t('noFit'))}</div>`).join('')}</div></div>`;
@@ -1178,7 +1202,7 @@ const UI = {
     const done = !!S.done[p.id];
     const time = s.time && s.time !== '—' ? `<span class="time">${s.time}</span>` : '';
     return `<li class="stop k-${p.kind}" data-card="${p.id}"><span class="num">${n}</span><div class="body"><div class="card sc ${isNext ? 'next' : ''}">
-      <button class="sc-main" data-act="more" data-id="${p.id}">${phHTML(p.id)}<div class="sc-txt"><div class="sc-top">${time}${isNext ? `<span class="nextbadge">${esc(t('next'))}</span>` : ''}<span class="kind">${esc(kindLabel(p))}</span></div><h4>${esc(p.name)}</h4><div class="sub">${esc(p.area || '')}${p.rating ? ` · <span class="star">★ ${String(p.rating).replace('.', LANG === 'en' ? '.' : ',')}</span>` : ''}${inf.duration ? ` · ${fmtMin(inf.duration)}` : ''}</div>${p.custom ? `<div class="sub">${esc(t('myPoint'))}</div>` : ''}</div><span class="more-i">${ic(open ? 'chevD' : 'info', 's')}</span></button>
+      <button class="sc-main" data-act="more" data-id="${p.id}">${phHTML(p.id)}<div class="sc-txt"><div class="sc-top">${time}${isNext ? `<span class="nextbadge">${esc(t('next'))}</span>` : ''}${d.date && ticketPlace(d.date, p.id) ? `<span class="tkbadge">★ ${esc(t('tkBadge'))}</span>` : ''}<span class="kind">${esc(kindLabel(p))}</span></div><h4>${esc(p.name)}</h4><div class="sub">${esc(p.area || '')}${p.rating ? ` · <span class="star">★ ${String(p.rating).replace('.', LANG === 'en' ? '.' : ',')}</span>` : ''}${inf.duration ? ` · ${fmtMin(inf.duration)}` : ''}</div>${p.custom ? `<div class="sub">${esc(t('myPoint'))}</div>` : ''}</div><span class="more-i">${ic(open ? 'chevD' : 'info', 's')}</span></button>
       ${open ? this.details(p, inf) : ''}
       <div class="sc-act"><button class="btn ${done ? 'ok' : 'pri'}" data-act="toggle" data-id="${p.id}">${ic(done ? 'undo' : 'check', 's')}${esc(done ? t('undo') : t('conclude'))}</button>
       ${p.unmapped ? '' : `<button class="btn" data-act="map-place" data-id="${p.id}" data-day="${d.slot === 'main' ? d.id : ''}">${ic('map', 's')}${esc(t('mapBtn'))}</button><button class="btn" data-act="nav" data-id="${p.id}" data-from="${this.prevOf(d, p.id)}">${ic('nav', 's')}${esc(t('go'))}</button>`}
@@ -1228,8 +1252,16 @@ const UI = {
       ${done.length ? `<details class="fold" open><summary><span class="ic">${ic('check', 's')}</span>${esc(t('doneT'))}<span class="cnt">${done.length}</span><span class="chev">${ic('chevD', 's')}</span></summary><div class="rows">${done.map(o => `<div class="row done"><span class="tick">${ic('check', 'xs')}</span><div class="rt"><b>${esc(L(o.x))}</b></div><button class="btn sm" data-act="step" data-step="${o.k}">${ic('undo', 's')}</button></div>`).join('')}</div></details>` : ''}`;
   },
   giftsCard(g) { return `<div class="card panel sec gift"><div class="eyebrow">🔒 ${esc(t('vaultT'))}</div><h3>${esc(L(g.title))}</h3>${this.checklist('gift', g.items)}</div>`; },
+  resBody(r) {
+    return `<p><b style="font-family:var(--mono);font-size:16px">${esc(r.code)}</b> · ${esc(r.name)}</p>${r.qr ? `<div class="qrs">${r.qr.map(([l, src]) => `<figure><img src="${src}" alt="QR"><figcaption>${esc(L(l))}</figcaption></figure>`).join('')}</div><p class="credits" style="text-align:center">${esc(t('tkShow'))}</p>` : ''}<p>${esc(L(r.text))}</p><div class="links">${r.links.map(([l, u]) => `<a class="btn sm" href="${esc(u)}" target="_blank" rel="noopener">${ic('ext', 's')}${esc(L(l))}</a>`).join('')}</div>`;
+  },
   reservationCard(r) {
-    return `<div class="card panel sec"><div class="eyebrow">🔒 ${esc(t('resT'))}</div><h3>${esc(L(r.title))}</h3><p><b style="font-family:var(--mono);font-size:16px">${esc(r.code)}</b> · ${esc(r.name)}</p><p>${esc(L(r.text))}</p><div class="links">${r.links.map(([l, u]) => `<a class="btn sm" href="${esc(u)}" target="_blank" rel="noopener">${ic('ext', 's')}${esc(L(l))}</a>`).join('')}</div></div>`;
+    return `<div class="card panel sec"><div class="eyebrow">🔒 ${esc(t('resT'))}</div><h3>${esc(L(r.title))}</h3>${this.resBody(r)}</div>`;
+  },
+  ticketCard(tk, r, sc) {
+    const st = sc && sc.stops.find(s => tk.places.includes(s.id)), when = st && st.time && st.time !== '—' && !L(tk.kind).includes(st.time) ? ` · ${st.time}` : '';
+    const locked = !r && Vault.has() && !Vault.unlocked && Vault.dates().includes(tk.date);
+    return `<div class="ticket sec"><div class="tk-l"><span class="tk-star">★</span><span class="tk-d">${esc(fmtDate(tk.date, { weekday: 'short' }).replace('.', ''))}<b>${fmtDate(tk.date, { day: 'numeric' })}</b>${esc(fmtDate(tk.date, { month: 'short' }).replace('.', ''))}</span></div><div class="tk-r"><div class="tk-k">★ ${esc(t('tkHas'))}</div><h3>${esc(L(tk.title))}</h3><div class="tk-when">${esc(L(tk.kind))}${esc(when)}</div><p>${esc(L(tk.hint))}</p>${r ? `<div class="tk-res">${this.resBody(r)}</div>` : locked ? `<p class="credits">🔒 ${esc(t('tkCode'))}</p>` : ''}</div></div>`;
   },
   breakCard(b) {
     const sc = schedule(b);
@@ -1262,26 +1294,31 @@ const UI = {
       <details class="fold"><summary><span class="ic">${ic('coin', 's')}</span>${esc(t('kartByDay'))}<span class="cnt">${k.nAll}</span><span class="chev">${ic('chevD', 's')}</span></summary><table class="fares kt"><tr><th>${esc(t('kartDay'))}</th><th>${esc(t('kartRides'))}</th><th>TL</th></tr>${rows}<tr class="tot"><td>${esc(t('kartFirst7'))}</td><td>${k.n7}</td><td>${fmtTL(k.s7)}</td></tr><tr class="tot"><td>${esc(t('kartAll'))}</td><td>${k.nAll}</td><td>${fmtTL(k.all)}</td></tr></table></details>
       <p style="font-size:13px">${esc(t('kartRest', { n: k.nAll, sum: fmtTL(k.all), rest: fmtTL(k.rest, 0) }))}</p><p class="credits">${esc(t('kartNote'))}</p></div>`;
   },
-  lineDiagram() {
-    const LX = TRIP.arrLine, r = ROUTES.ist__base; if (!LX || !r) return '';
-    const T = segTimes(r, '13:30'), col = { M11: '#8A94A6', M2: '#159A5B' };
-    let h = `<div class="linediag"><div class="ld-h">${esc(t('lineDiag'))}</div>`;
-    LX.forEach((ln, li) => {
-      const seg = T[li * 2], n = ln.st.length - 1, a = hm(seg.dep), b = hm(seg.arr);
+  lineDiagram(dep) {
+    const LX = dep ? TRIP.depLine : TRIP.arrLine, key = dep ? 'base__ist' : 'ist__base', r = ROUTES[key]; if (!LX || !r) return '';
+    const T = segTimes(r, dep ? '15:50' : '13:30'), col = { M11: '#8A94A6', M2: '#159A5B' };
+    let h = `<div class="linediag"><div class="ld-h">${esc(t('lineDiag'))}</div>`, li = 0;
+    r.segs.forEach((s, k) => {
+      const tt = T[k];
+      if (s.m === 'walk') {
+        const nxt = LX[li], txt = k === 0 ? t('walkToSt', { x: LX[0].st[0].n }) : k === r.segs.length - 1 ? t('walkTo') : t('transferSigns', { x: `${nxt.line} · ${nxt.dir}` });
+        h += `<div class="ld-walk">${ic('walk', 's')}<span>${fmtDist(s.d)} · ~${fmtMin(segMin(s))} · ${esc(txt)}</span><button class="btn sm ghost" data-act="map-seg" data-key="${key}" data-seg="${k}">${ic('map', 's')}</button></div>`;
+        return;
+      }
+      const ln = LX[li++], nxt = LX[li], n = ln.st.length - 1, a = hm(tt.dep), b = hm(tt.arr);
       h += `<div class="ld-line" style="--lc:${col[ln.line]}"><div class="ld-badge"><b>${ln.line}</b> ${esc(t('towards'))} ${esc(ln.dir)} · ${n} ${esc(t('stopsN'))}</div><ol>${ln.st.map((st, i) => {
-        const role = i === 0 ? 'board' : i === n ? (li === 0 ? 'change' : 'off') : 'mid';
-        const tag = role === 'board' ? t('boardHere') : role === 'change' ? t('changeHere') : role === 'off' ? t('offHere') : `${t('stopOf', { i, n })} · ${t('dontOff')}`;
+        const role = i === 0 ? 'board' : i === n ? (nxt ? 'change' : 'off') : 'mid';
+        const tag = role === 'board' ? t('boardHere') : role === 'change' ? t('changeHere', { l: nxt.line }) : role === 'off' ? t('offHere') : `${t('stopOf', { i, n })} · ${t('dontOff')}`;
         return `<li class="ld-st ${role}"><span class="dot"></span><span class="nm">${i ? `<i class="ix">${i}</i>` : ''}${esc(ST_NAME[st.n] || st.n)}</span><span class="tg">${esc(tag)}</span><span class="tm">~${fmtHM(Math.round(a + (b - a) * (i / n)))}</span></li>`;
       }).join('')}</ol></div>`;
-      const w = T[li * 2 + 1];
-      h += `<div class="ld-walk">${ic('walk', 's')}<span>${fmtDist(w.s.d)} · ~${fmtMin(segMin(w.s))} · ${esc(li === 0 ? L({ pt: 'baldeação: siga as placas “M2 · Yenikapı”', en: 'transfer: follow the “M2 · Yenikapı” signs', tr: 'aktarma: “M2 · Yenikapı” tabelalarını izleyin' }) : t('walkTo'))}</span><button class="btn sm ghost" data-act="map-seg" data-seg="${li * 2 + 1}">${ic('map', 's')}</button></div>`;
     });
-    return h + `<div class="ld-end">${ic('home', 's')}<b>Airbnb</b><span class="tm">~${T[T.length - 1].arr}</span></div></div>`;
+    return h + `<div class="ld-end">${dep ? '✈' : ic('home', 's')}<b>${dep ? 'IST · İstanbul Havalimanı' : 'Airbnb'}</b><span class="tm">~${T[T.length - 1].arr}</span></div></div>`;
   },
   departureCard() {
     const G = TRIP.guide, steps = G.depSteps.map((s, i) => ({ id: 'dep:' + i, time: s[0], text: s[1] }));
     const pend = steps.filter(s => !S.steps[s.id]), done = steps.filter(s => S.steps[s.id]);
     return `<div class="card panel sec"><div class="eyebrow">${ic('plane', 'xs')} ${esc(t('depT'))}</div><h3>${esc(L(G.depTitle))}</h3>
+      <button class="btn sm" data-act="map-route" data-key="base__ist">${ic('map', 's')}${esc(t('seeOnMap'))}</button>${this.lineDiagram(true)}
       <ol class="steps">${pend.map(s => `<li class="step"><span class="sn" style="width:auto;padding:0 7px;border-radius:8px;font-family:var(--mono)">${s.time}</span><div class="st">${esc(L(s.text))}</div><button class="chk" data-act="step" data-step="${s.id}">${ic('check', 's')}</button></li>`).join('')}</ol>
       ${done.length ? `<details class="fold" open><summary><span class="ic">${ic('check', 's')}</span>${esc(t('doneT'))}<span class="cnt">${done.length}</span><span class="chev">${ic('chevD', 's')}</span></summary><div class="rows">${done.map(s => `<div class="row done"><span class="tick">${ic('check', 'xs')}</span><div class="rt"><b>${s.time} · ${esc(L(s.text))}</b></div><button class="btn sm" data-act="step" data-step="${s.id}">${ic('undo', 's')}</button></div>`).join('')}</div></details>` : ''}</div>`;
   },
@@ -1362,9 +1399,10 @@ const UI = {
       <div class="card mappack" id="mappack" style="margin-top:12px"></div>
       ${Vault.has() ? (Vault.unlocked ? gc('shield', t('vaultT'), t('vaultOk'), `${Vault.reservations().map(r => this.reservationCard(r)).join('')}<button class="btn sm ghost" data-act="lock">${ic('shield', 's')}${esc(t('vaultLock'))}</button>`) : this.lockCard(false)) : ''}
       ${gc('plane', L(G.arrTitle), L(G.arrLanding), `<p>${esc(L(G.arrChain))}</p><p>${esc(L(G.arrPlan))}</p><button class="btn sm" data-act="day" data-day="2026-10-21" data-goto="roteiro">${ic('route', 's')}${esc(t('arrivalSteps'))}</button> <button class="btn sm" data-act="map-route" data-key="ist__base">${ic('map', 's')}${esc(t('seeOnMap'))}</button>`)}
+      ${(G.tickets || []).length ? gc('ticket', t('tkAllT'), `${G.tickets.length} ★`, [...G.tickets].sort((a, b) => a.date.localeCompare(b.date)).map(tk => `<div class="tk-row"><span class="tk-star">★</span><div><b>${esc(fmtDate(tk.date, { weekday: 'short', day: 'numeric', month: 'short' }))} · ${esc(L(tk.title))}</b><small>${esc(L(tk.kind))}</small></div><button class="btn sm" data-act="day" data-day="${DAYS.find(x => x.date === tk.date).id}" data-goto="roteiro">${esc(t('tkSee'))}</button></div>`).join(''), true) : ''}
       ${gc('coin', t('kartT'), `${t('kartLoad')}: ${fmtTL(Kart.calc().load, 0)}`, this.kartCard(true))}
       ${gc('shop', t('groT'), t('bfRule'), `<p>${esc(L(G.groceryWhere))}</p>${this.checklist('gro', G.grocery)}`)}
-      ${gc('home', t('depT'), L(G.depTitle), `<ol class="steps">${G.depSteps.map(s => `<li class="step"><span class="sn" style="width:auto;padding:0 7px;border-radius:8px;font-family:var(--mono)">${s[0]}</span><div class="st">${esc(L(s[1]))}</div></li>`).join('')}</ol>`)}
+      ${gc('home', t('depT'), L(G.depTitle), `<ol class="steps">${G.depSteps.map(s => `<li class="step"><span class="sn" style="width:auto;padding:0 7px;border-radius:8px;font-family:var(--mono)">${s[0]}</span><div class="st">${esc(L(s[1]))}</div></li>`).join('')}</ol><button class="btn sm" data-act="map-route" data-key="base__ist">${ic('map', 's')}${esc(t('seeOnMap'))}</button>`)}
       ${gc('cap', t('weekT'), t('classesT'), week)}
       ${gc('tram', t('facT'), 'T1 Karaköy → Laleli–Üniversite', `<p>${esc(L(G.faculty).replace('{dep}', `${classInfo('2026-10-26').departure} / ${classInfo('2026-10-28').departure}`).replace('{arr}', `${classInfo('2026-10-26').campusArrival} / ${classInfo('2026-10-28').campusArrival}`))}</p><button class="btn sm" data-act="map-route" data-key="base__university">${ic('map', 's')}${esc(t('seeOnMap'))}</button>`)}
       ${gc('cal', L(G.datesTitle), '', `<p>${esc(L(G.datesText))}</p><p>${esc(L(G.datesMeals))}</p>`)}
@@ -1462,7 +1500,7 @@ document.addEventListener('click', e => {
     case 'map-place': { UI.go('mapa'); const dd = a.dataset.day; if (dd) { MapView.show({ type: 'day', dayId: dd }); setTimeout(() => MapView.select(id), MapView.ready ? 50 : 900); } else MapView.show({ type: 'place', id }); break; }
     case 'map-leg': UI.go('mapa'); MapView.show({ type: 'leg', dayId: a.dataset.day, key: a.dataset.key }); break;
     case 'map-route': UI.go('mapa'); MapView.show({ type: 'route', key: a.dataset.key }); break;
-    case 'map-seg': UI.go('mapa'); MapView.show({ type: 'route', key: 'ist__base', seg: +a.dataset.seg }); break;
+    case 'map-seg': UI.go('mapa'); MapView.show({ type: 'route', key: a.dataset.key || 'ist__base', seg: +a.dataset.seg }); break;
     case 'map-circuit': UI.go('mapa'); MapView.show({ type: 'circuit', id }); break;
     case 'map-prev': MapView.step(-1); break;
     case 'map-next': MapView.step(1); break;
