@@ -2,7 +2,7 @@
    Data: window.TRIP (data.js). Map: MapLibre GL + PMTiles (OpenMapTiles/OpenFreeMap, © OpenStreetMap). */
 'use strict';
 const TRIP = window.TRIP;
-const VERSION = '6.2.0';
+const VERSION = '6.3.0';
 const STORE = 'ist-a-dois-v6';
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
@@ -97,14 +97,14 @@ const I = {
   commuteTxt: ['Já inclui 10 min de folga para o bonde cheio de manhã e 10 min para chegar à sala antes das {c}. Café da manhã em casa (lista de mercado no dia 21).', 'Includes 10 min of slack for the packed morning tram and 10 min to reach the classroom before {c}. Breakfast at home (grocery list on 21 Oct).', 'Sabah kalabalık tramvay için 10 dk pay ve {c} öncesi sınıfa varmak için 10 dk dahil. Kahvaltı evde (market listesi 21 Ekim’de).'],
   classAt: ['aula', 'class', 'ders'], fBreakfast: ['Café da manhã', 'Breakfast', 'Kahvaltı'],
   idaT: ['Ida', 'Outbound', 'Gidiş'], voltaT: ['Volta', 'Return', 'Dönüş'], walkS: ['a pé', 'walk', 'yürüyüş'], rideS: ['transporte', 'transit', 'ulaşım'],
-  stepMap: ['Ver no mapa', 'See on map', 'Haritada gör'], lineDiag: ['Estações em ordem — confira o nome na placa', 'Stations in order — check the name on the sign', 'Sırasıyla duraklar — tabeladaki adı kontrol edin'],
+  stepMap: ['Ver no mapa', 'See on map', 'Haritada gör'], miniTap: ['Toque para abrir o mapa e arrastar', 'Tap to open the map and drag', 'Haritayı açıp kaydırmak için dokunun'], miniHint: ['Arraste e use dois dedos para zoom', 'Drag; pinch with two fingers to zoom', 'Kaydırın; yakınlaştırmak için iki parmak'], fullMap: ['Tela cheia', 'Full screen', 'Tam ekran'], lineDiag: ['Estações em ordem — confira o nome na placa', 'Stations in order — check the name on the sign', 'Sırasıyla duraklar — tabeladaki adı kontrol edin'],
   boardHere: ['EMBARQUE AQUI', 'BOARD HERE', 'BURADAN BİN'], changeHere: ['DESÇA E TROQUE → {l}', 'GET OFF, CHANGE → {l}', 'İN, AKTARMA → {l}'], transferSigns: ['baldeação: siga as placas “{x}”', 'transfer: follow the “{x}” signs', 'aktarma: “{x}” tabelalarını izleyin'], walkToSt: ['a pé até a estação {x}', 'walk to {x} station', '{x} istasyonuna yürüyüş'], offHere: ['DESÇA AQUI', 'GET OFF HERE', 'BURADA İN'], dontOff: ['não desça', 'stay on', 'inme'],
   stopOf: ['parada {i} de {n}', 'stop {i} of {n}', '{n} duraktan {i}.'], walkTo: ['a pé até o Airbnb', 'walk to the Airbnb', 'Airbnb’ye yürüyüş'],
   kartT: ['Istanbulkart: quanto carregar', 'Istanbulkart: how much to load', 'İstanbulkart: ne kadar yüklenmeli'], kartLoad: ['Carregue no aeroporto', 'Load at the airport', 'Havalimanında yükleyin'],
   kartHow: ['Na máquina amarela (Biletmatik) da estação M11: 1) compre o cartão ({card}); 2) toque em “Bakiye yükle/Top up”, encoste o cartão e coloque {load}. Total em dinheiro: {total}. A máquina não dá troco — leve notas que somem exatamente isso.', 'At the yellow machine (Biletmatik) in the M11 station: 1) buy the card ({card}); 2) tap “Bakiye yükle/Top up”, hold the card on the reader and insert {load}. Total cash: {total}. The machine gives no change — bring notes that add up exactly.', 'M11 istasyonundaki sarı makinede (Biletmatik): 1) kartı alın ({card}); 2) “Bakiye yükle”ye dokunun, kartı okutun ve {load} yükleyin. Toplam nakit: {total}. Makine para üstü vermez — tam tutarda banknot getirin.'],
   kartWhy: ['Conta feita com o seu roteiro: {n} embarques nos 7 primeiros dias (21–27/10) = {sum}, mais 15% de folga (um ônibus extra, um trecho a mais) e arredondado para cima.', 'Worked out from your itinerary: {n} rides in the first 7 days (21–27 Oct) = {sum}, plus 15% slack (an extra bus, one more leg) and rounded up.', 'Planınıza göre: ilk 7 günde (21–27 Ekim) {n} biniş = {sum}, %15 pay (fazladan bir otobüs, bir ek yol) ve yukarı yuvarlanmış.'],
   kartRest: ['Viagem inteira (21/10–4/11): {n} embarques ≈ {sum}. Lá pelo dia 28 recarregue mais ~{rest} em qualquer máquina de metrô/bonde ou balsa. Valores só para você — a Zeynep usa o cartão dela.', 'Whole trip (21 Oct–4 Nov): {n} rides ≈ {sum}. Around 28 Oct top up another ~{rest} at any metro/tram or ferry machine. Amounts are just for you — Zeynep uses her own card.', 'Tüm gezi (21 Ekim–4 Kasım): {n} biniş ≈ {sum}. 28 Ekim civarında herhangi bir metro/tramvay veya iskele makinesinden ~{rest} daha yükleyin. Tutarlar sadece sizin için — Zeynep kendi kartını kullanır.'],
-  kartNote: ['Tarifa cheia 46,20 TL por embarque (desde 20/07/2026) em bonde, metrô, ônibus e funicular; M11 73,19 TL. Balsas (~65 TL) e Adalar (~272 TL) são estimativas. Cartão anônimo: sem desconto de baldeação — cada embarque cobra a tarifa inteira. O cruzeiro e o transfer de volta não usam o cartão.', 'Full fare 46.20 TL per ride (since 20 Jul 2026) on tram, metro, bus and funicular; M11 73.19 TL. Ferries (~65 TL) and the Islands ferry (~272 TL) are estimates. Anonymous card: no transfer discount — every boarding is charged in full. The cruise and the return transfer do not use the card.', 'Tramvay, metro, otobüs ve füniküler için biniş başı tam ücret 46,20 TL (20/07/2026’dan beri); M11 73,19 TL. Vapur (~65 TL) ve Adalar (~272 TL) tahminidir. Anonim kart: aktarma indirimi yok — her biniş tam ücret. Tekne turu ve dönüş transferi kart kullanmaz.'],
+  kartNote: ['Tarifa cheia 46,20 TL por embarque (desde 20/07/2026) em bonde, metrô, ônibus e funicular; M11 73,19 TL. Balsas (~65 TL) e Adalar (~272 TL) são estimativas. Cartão anônimo: sem desconto de baldeação — cada embarque cobra a tarifa inteira. O cruzeiro não usa o cartão.', 'Full fare 46.20 TL per ride (since 20 Jul 2026) on tram, metro, bus and funicular; M11 73.19 TL. Ferries (~65 TL) and the Islands ferry (~272 TL) are estimates. Anonymous card: no transfer discount — every boarding is charged in full. The cruise does not use the card.', 'Tramvay, metro, otobüs ve füniküler için biniş başı tam ücret 46,20 TL (20/07/2026’dan beri); M11 73,19 TL. Vapur (~65 TL) ve Adalar (~272 TL) tahminidir. Anonim kart: aktarma indirimi yok — her biniş tam ücret. Tekne turu kart kullanmaz.'],
   kartDay: ['Dia', 'Day', 'Gün'], kartByDay: ['Conta dia a dia', 'Day by day', 'Gün gün'], kartRides: ['embarques', 'rides', 'biniş'], kartFirst7: ['7 primeiros dias', 'first 7 days', 'ilk 7 gün'], kartAll: ['viagem inteira', 'whole trip', 'tüm gezi'],
   groT: ['Lista de mercado · café da manhã', 'Grocery list · breakfast', 'Market listesi · kahvaltı'],
   bfRule: ['Nos dias sem aula de manhã, o dia começa com café da manhã fora (nota 4,7 ou mais). Nos dias de aula cedo, café em casa.', 'On days without morning classes the day starts with breakfast out (rated 4.7+). On early class days, breakfast at home.', 'Sabah dersi olmayan günler dışarıda kahvaltıyla başlar (puan 4,7+). Erken dersli günlerde kahvaltı evde.'],
@@ -128,7 +128,7 @@ const IC = {
   trash: '<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>',
   nav: '<path d="M3 11 22 2l-9 19-2-8-8-2z"/>', locate: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7"/>',
   compass: '<circle cx="12" cy="12" r="10"/><path d="m16.2 7.8-2.1 6.3-6.3 2.1 2.1-6.3z"/>',
-  expand: '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>',
+  expand: '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>', hand: '<path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12M11 11.5v-2a1.5 1.5 0 0 1 3 0V12M14 10.5a1.5 1.5 0 0 1 3 0V12M17 11.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-2a6 6 0 0 1-4.6-2.2L4.3 16a1.5 1.5 0 0 1 2.3-1.9L8 15.5"/>',
   chevL: '<path d="m15 18-6-6 6-6"/>', chevR: '<path d="m9 18 6-6-6-6"/>', chevD: '<path d="m6 9 6 6 6-6"/>',
   ext: '<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
   walk: '<circle cx="13" cy="4" r="2"/><path d="m9 20 3-6 3 3v4M7 12l3-4 4 1 3 4M10 8l-1 5"/>',
@@ -640,29 +640,78 @@ const inIstanbul = p => p && p.lat > IST_BOX.s && p.lat < IST_BOX.n && p.lng > I
 /* the leg that closes a day (back home / back to the faculty) is the 'volta' */
 const isAir = k => k === 'ist__base' || k === 'base__ist';
 const markBack = (day, legs) => legs.map((l, i) => ({ ...l, v: i === legs.length - 1 && l.to === day.end && legs.length > 1 ? 1 : 0 }));
-const MapView = {
-  map: null, ready: false, failed: false, markers: [], extra: [], ctx: null, sel: null, follow: false, dark: false, pending: null,
-  async init() {
-    if (this.map || this.failed) return;
-    const el = $('#map');
-    try {
-      await loadLibs();
-      const cv = document.createElement('canvas'); if (!(cv.getContext('webgl2') || cv.getContext('webgl'))) throw new Error('webgl');
-    } catch (e) { this.fail(); return; }
+/* one-time MapLibre boot shared by the big map and the inline mini-maps */
+let bootPromise = null;
+function mapBoot() {
+  if (bootPromise) return bootPromise;
+  bootPromise = (async () => {
+    await loadLibs();
+    const cv = document.createElement('canvas'); if (!(cv.getContext('webgl2') || cv.getContext('webgl'))) throw new Error('webgl');
     await Tiles.useCache();
     const proto = new pmtiles.Protocol();
     proto.add(new pmtiles.PMTiles(Tiles.source()));
     maplibregl.addProtocol('pmtiles', proto.tile);
     maplibregl.addProtocol('glyphs', async (params) => ({ data: await Glyphs.get(params.url) }));
+  })();
+  bootPromise.catch(() => { bootPromise = null; });
+  return bootPromise;
+}
+/* inline mini-map: the arrival-step picture turns into a real map you can drag and pinch (one at a time) */
+const MiniMap = {
+  cur: null,
+  async open(btn) {
+    const key = btn.dataset.key || 'ist__base', seg = btn.dataset.seg === undefined ? undefined : +btn.dataset.seg;
+    this.close();
+    try { await mapBoot(); } catch (e) { UI.go('mapa'); MapView.show({ type: 'route', key, seg }); return; }
+    const r = isAir(key) ? ROUTES[key] : legRoute(PL[key.split('__')[0]], PL[key.split('__')[1]]); if (!r) return;
+    const pts = []; r.segs.forEach((s, i) => { if (seg === undefined || i === seg) s.c.forEach(c => pts.push(c)); });
+    if (!pts.length) return;
+    const wrap = document.createElement('div'); wrap.className = 'minimap';
+    wrap.innerHTML = `<div class="mm"></div><div class="mm-bar"><span>${ic('hand', 's')}${esc(t('miniHint'))}</span><button class="btn sm" data-act="map-seg" data-key="${esc(key)}" data-seg="${seg === undefined ? '' : seg}">${ic('expand', 's')}${esc(t('fullMap'))}</button><button class="btn sm ghost" data-act="mini-close" aria-label="close">${ic('x', 's')}</button></div>`;
+    btn.hidden = true; btn.after(wrap);
+    const dark = document.documentElement.dataset.theme === 'dark' || (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
+    const b = pts.reduce((bb, c) => bb.extend(c), new maplibregl.LngLatBounds(pts[0], pts[0]));
+    const m = new maplibregl.Map({ container: wrap.querySelector('.mm'), style: mapStyle(dark), bounds: b, fitBoundsOptions: { padding: 34, maxZoom: 16.5 }, minZoom: 8, maxZoom: 19,
+      attributionControl: false, dragPan: true, touchZoomRotate: true, cooperativeGestures: false, dragRotate: false, pitchWithRotate: false, touchPitch: false, fadeDuration: 0 });
+    m.touchZoomRotate.disableRotation();
+    m.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
+    m.on('load', () => {
+      m.resize(); m.fitBounds(b, { padding: { top: 40, bottom: 30, left: 56, right: 56 }, maxZoom: 16.5, duration: 0 });
+      const at = wrap.querySelector('.maplibregl-ctrl-attrib'); if (at) at.classList.remove('maplibregl-compact-show');
+      const walkC = dark ? '#3CCB86' : '#159A5B', rideC = dark ? '#A08BF5' : '#6F4FD8', W = dark ? '#0D1420' : '#FFFFFF';
+      const feats = r.segs.map((s, i) => ({ type: 'Feature', properties: { k: s.m === 'walk' ? 'walk' : 'ride', f: seg !== undefined && i !== seg ? 1 : 0 }, geometry: { type: 'LineString', coordinates: s.c } }));
+      m.addSource('mm', { type: 'geojson', data: { type: 'FeatureCollection', features: feats } });
+      const op = ['case', ['==', ['get', 'f'], 1], 0.3, 1];
+      m.addLayer({ id: 'mm-case', type: 'line', source: 'mm', layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': W, 'line-width': 9, 'line-opacity': op } });
+      m.addLayer({ id: 'mm-ride', type: 'line', source: 'mm', filter: ['==', ['get', 'k'], 'ride'], layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': rideC, 'line-width': 5, 'line-opacity': op } });
+      m.addLayer({ id: 'mm-walk', type: 'line', source: 'mm', filter: ['==', ['get', 'k'], 'walk'], layout: { 'line-join': 'round' }, paint: { 'line-color': walkC, 'line-width': 4.2, 'line-dasharray': [1.5, 1.2], 'line-opacity': op } });
+      const s = seg === undefined ? null : r.segs[seg];
+      const ends = s ? [[s.c[0], s.from || ''], [s.c[s.c.length - 1], s.to || '']] : [[r.segs[0].c[0], ''], [r.segs[r.segs.length - 1].c.slice(-1)[0], '']];
+      ends.forEach(([c, nm], i) => { const el = document.createElement('div'); el.className = nm ? `st-pin ${s.m}` : 'mm-dot' + (i ? ' end' : ''); el.textContent = nm ? `${s.line || ''} ${ST_NAME[nm] || nm}`.trim() : ''; new maplibregl.Marker({ element: el, anchor: nm ? 'bottom' : 'center', offset: nm ? [0, -6] : [0, 0] }).setLngLat(c).addTo(m); });
+      if (seg === 3 && key === 'ist__base' && PL.base) { const el = document.createElement('div'); el.className = 'mk base'; el.innerHTML = ic('home'); new maplibregl.Marker({ element: el }).setLngLat([PL.base.lng, PL.base.lat]).addTo(m); }
+    });
+    this.cur = { m, wrap, btn };
+    wrap.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  },
+  close() { const c = this.cur; if (!c) return; this.cur = null; try { c.m.remove(); } catch (e) {} c.wrap.remove(); c.btn.hidden = false; },
+};
+const MapView = {
+  map: null, ready: false, failed: false, markers: [], extra: [], ctx: null, sel: null, follow: false, dark: false, pending: null,
+  async init() {
+    if (this.map || this.failed) return;
+    const el = $('#map');
+    try { await mapBoot(); } catch (e) { this.fail(); return; }
     this.dark = document.documentElement.dataset.theme === 'dark' || (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
     const m = this.map = new maplibregl.Map({
       container: el, style: mapStyle(this.dark), center: [28.9725, 41.0257], zoom: 13.4, minZoom: 8, maxZoom: 19,
-      maxBounds: [[27.4, 40.2], [30.4, 41.8]], attributionControl: false, dragRotate: true, pitchWithRotate: false, touchPitch: false, fadeDuration: 0,
+      maxBounds: [[27.4, 40.2], [30.4, 41.8]], attributionControl: false, dragPan: true, touchZoomRotate: true, scrollZoom: true, doubleClickZoom: true, cooperativeGestures: false, dragRotate: true, pitchWithRotate: false, touchPitch: false, fadeDuration: 0,
     });
     m.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
     m.addControl(new maplibregl.ScaleControl({ maxWidth: 90, unit: 'metric' }), 'bottom-right');
     m.on('load', () => { this.addLayers(); this.ready = true; if (this.pending) { const p = this.pending; this.pending = null; this.show(p); } else this.show(this.ctx || { type: 'day', dayId: currentDay().id }); });
     m.on('dragstart', () => { if (this.follow) { this.follow = false; this.renderTools(); } });
+    // any gesture by the user (drag, pinch, wheel) stops "follow my position", so GPS updates never pull the map back
+    m.on('movestart', e => { if (e && e.originalEvent && this.follow) { this.follow = false; this.renderTools(); } });
     m.on('rotate', () => Geo.paintHeading());
     m.on('click', e => { if (e.originalEvent && e.originalEvent.target === m.getCanvas()) { if (!Nav.active) this.closeSheet(); } });
     // long-press → add your own spot
@@ -1082,6 +1131,7 @@ const UI = {
     document.documentElement.lang = LOC[LANG];
   },
   render() {
+    MiniMap.close();
     if (this.view === 'roteiro') this.renderRoteiro();
     else if (this.view === 'lugares') this.renderLugares();
     else if (this.view === 'intervalo') this.renderIntervalo();
@@ -1271,25 +1321,27 @@ const UI = {
   arrivalCard() {
     const G = TRIP.guide, steps = TRIP.arrival;
     const pend = steps.filter(s => !S.steps['arr:' + s.id]), done = steps.filter(s => S.steps['arr:' + s.id]);
-    const stepHTML = (s, i) => `<li class="step ${s.kind === 'transit' ? 'ride' : s.id === 'atm' ? 'gold' : ''}"><span class="sn">${i + 1}</span><div class="st"><b>${esc(L(s.title))}</b>${esc(L(s.text))}${s.instructions ? `<ol>${s.instructions.map(x => `<li>${esc(L(x))}</li>`).join('')}</ol>` : ''}${ARR_SEG[s.id] !== undefined && (TRIP.arrThumbs || {})[s.id] ? `<button class="arrthumb" data-act="map-seg" data-seg="${ARR_SEG[s.id]}"><img src="${TRIP.arrThumbs[s.id]}" alt="" loading="lazy"><span>${ic('map', 'xs')}${esc(t('stepMap'))}</span></button>` : ''}<div class="links">${ARR_SEG[s.id] !== undefined ? `<button class="btn sm" data-act="map-seg" data-seg="${ARR_SEG[s.id]}">${ic('map', 's')}${esc(t('stepMap'))}</button>` : ''}${s.href ? `<a href="${esc(s.href)}" target="_blank" rel="noopener">${ic('ext', 's')}${esc(L(s.link))}</a>` : ''}${s.alternativeHref ? `<a href="${esc(s.alternativeHref)}" target="_blank" rel="noopener">${ic('ext', 's')}${esc(L(s.alternativeLink))}</a>` : ''}</div></div><button class="chk ${S.steps['arr:' + s.id] ? 'on' : ''}" data-act="step" data-step="arr:${s.id}" aria-label="ok">${ic('check', 's')}</button></li>`;
+    const stepHTML = (s, i) => `<li class="step ${s.kind === 'transit' ? 'ride' : s.id === 'atm' ? 'gold' : ''}"><span class="sn">${i + 1}</span><div class="st"><b>${esc(L(s.title))}</b>${esc(L(s.text))}${s.instructions ? `<ol>${s.instructions.map(x => `<li>${esc(L(x))}</li>`).join('')}</ol>` : ''}${ARR_SEG[s.id] !== undefined && (TRIP.arrThumbs || {})[s.id] ? `<button class="arrthumb" data-act="mini-map" data-key="ist__base" data-seg="${ARR_SEG[s.id]}"><img src="${TRIP.arrThumbs[s.id]}" alt="" loading="lazy"><span>${ic('hand', 'xs')}${esc(t('miniTap'))}</span></button>` : ''}<div class="links">${ARR_SEG[s.id] !== undefined ? `<button class="btn sm" data-act="map-seg" data-seg="${ARR_SEG[s.id]}">${ic('map', 's')}${esc(t('stepMap'))}</button>` : ''}${s.href ? `<a href="${esc(s.href)}" target="_blank" rel="noopener">${ic('ext', 's')}${esc(L(s.link))}</a>` : ''}${s.alternativeHref ? `<a href="${esc(s.alternativeHref)}" target="_blank" rel="noopener">${ic('ext', 's')}${esc(L(s.alternativeLink))}</a>` : ''}</div></div><button class="chk ${S.steps['arr:' + s.id] ? 'on' : ''}" data-act="step" data-step="arr:${s.id}" aria-label="ok">${ic('check', 's')}</button></li>`;
     return `<div class="card panel sec"><div class="eyebrow">${esc(L(G.arrHeader))}</div><h3>${esc(L(G.arrTitle))}</h3><p style="font-weight:700">${esc(L(G.arrLanding))}</p><p style="font-size:12.5px;color:var(--muted)">${esc(L(G.arrChain))}</p>
       <div class="callout" style="margin:10px 0">${ic('clock')}<div>${esc(L(G.arrPlan))}</div></div>
       <button class="btn sm" data-act="map-route" data-key="ist__base">${ic('map', 's')}${esc(t('seeOnMap'))}</button>
       ${this.lineDiagram()}
       <ol class="steps">${pend.map(s => stepHTML(s, steps.indexOf(s))).join('')}</ol>
       ${done.length ? `<details class="fold" open><summary><span class="ic">${ic('check', 's')}</span>${esc(t('doneT'))}<span class="cnt">${done.length}</span><span class="chev">${ic('chevD', 's')}</span></summary><div class="rows">${done.map(s => `<div class="row done"><span class="tick">${ic('check', 'xs')}</span><div class="rt"><b>${esc(L(s.title))}</b></div><button class="btn sm" data-act="step" data-step="arr:${s.id}">${ic('undo', 's')}</button></div>`).join('')}</div></details>` : ''}
-      <h3 style="margin-top:16px;font-size:16px">${esc(L(G.fareTitle))}</h3><table class="fares">${TRIP.fares.map(([k, v]) => `<tr><td>${esc(L(k))}</td><td>${esc(v)}</td></tr>`).join('')}</table><p style="font-size:12px;color:var(--muted)">${esc(L(G.fareNote))}</p>${this.kartCard(true)}</div>`;
+      <h3 style="margin-top:16px;font-size:16px">${esc(L(G.fareTitle))}</h3><table class="fares">${TRIP.fares.map(([k, v]) => `<tr><td>${esc(L(k))}</td><td>${esc(v)}</td></tr>`).join('')}</table><p style="font-size:12px;color:var(--muted)">${esc(L(G.fareNote))}</p>${this.kartCard(true, true)}</div>`;
   },
   groceryCard() {
     const G = TRIP.guide; if (!G.grocery) return '';
     return `<div class="card panel sec"><div class="eyebrow">🛒 ${esc(t('groT'))}</div><p>${esc(L(G.groceryWhere))}</p>${this.checklist('gro', G.grocery)}<p class="credits" style="margin-top:8px">${esc(t('bfRule'))}</p></div>`;
   },
-  kartCard(inArrival) {
+  kartCard(inArrival, short) {
     const k = Kart.calc(), dl = x => `${fmtDate(x.date, { weekday: 'short' }).replace('.', '')} ${fmtDate(x.date, { day: 'numeric', month: 'numeric' })}`;
     const rows = k.rows.map(r => `<tr class="${r.d.date <= '2026-10-27' ? 'f7' : ''}"><td>${esc(dl(r.d))}</td><td>${r.n}${r.n ? ` <small>${esc(r.lines.join(' · '))}</small>` : ''}</td><td>${r.tl ? fmtTL(r.tl) : '—'}</td></tr>`).join('');
-    return `<div class="${inArrival ? '' : 'card panel sec '}kart"><div class="eyebrow">💳 ${esc(t('kartT'))}</div>
+    const h = `<div class="${inArrival ? '' : 'card panel sec '}kart"><div class="eyebrow">💳 ${esc(t('kartT'))}</div>
       <div class="kart-big"><span>${esc(t('kartLoad'))}</span><b>${fmtTL(k.load, 0)}</b><small>+ ${fmtTL(k.card, 0)} · ${esc(L({ pt: 'cartão', en: 'card', tr: 'kart' }))} = <b>${fmtTL(k.load + k.card, 0)}</b></small></div>
-      <p>${esc(t('kartHow', { card: fmtTL(k.card, 0), load: fmtTL(k.load, 0), total: fmtTL(k.load + k.card, 0) }))}</p>
+      <p>${esc(t('kartHow', { card: fmtTL(k.card, 0), load: fmtTL(k.load, 0), total: fmtTL(k.load + k.card, 0) }))}</p>${short ? '</div>' : ''}`;
+    if (short) return h;
+    return h + `
       <p style="font-size:13px">${esc(t('kartWhy', { n: k.n7, sum: fmtTL(k.s7) }))}</p>
       <details class="fold"><summary><span class="ic">${ic('coin', 's')}</span>${esc(t('kartByDay'))}<span class="cnt">${k.nAll}</span><span class="chev">${ic('chevD', 's')}</span></summary><table class="fares kt"><tr><th>${esc(t('kartDay'))}</th><th>${esc(t('kartRides'))}</th><th>TL</th></tr>${rows}<tr class="tot"><td>${esc(t('kartFirst7'))}</td><td>${k.n7}</td><td>${fmtTL(k.s7)}</td></tr><tr class="tot"><td>${esc(t('kartAll'))}</td><td>${k.nAll}</td><td>${fmtTL(k.all)}</td></tr></table></details>
       <p style="font-size:13px">${esc(t('kartRest', { n: k.nAll, sum: fmtTL(k.all), rest: fmtTL(k.rest, 0) }))}</p><p class="credits">${esc(t('kartNote'))}</p></div>`;
@@ -1500,7 +1552,9 @@ document.addEventListener('click', e => {
     case 'map-place': { UI.go('mapa'); const dd = a.dataset.day; if (dd) { MapView.show({ type: 'day', dayId: dd }); setTimeout(() => MapView.select(id), MapView.ready ? 50 : 900); } else MapView.show({ type: 'place', id }); break; }
     case 'map-leg': UI.go('mapa'); MapView.show({ type: 'leg', dayId: a.dataset.day, key: a.dataset.key }); break;
     case 'map-route': UI.go('mapa'); MapView.show({ type: 'route', key: a.dataset.key }); break;
-    case 'map-seg': UI.go('mapa'); MapView.show({ type: 'route', key: a.dataset.key || 'ist__base', seg: +a.dataset.seg }); break;
+    case 'map-seg': MiniMap.close(); UI.go('mapa'); MapView.show({ type: 'route', key: a.dataset.key || 'ist__base', seg: a.dataset.seg === '' || a.dataset.seg === undefined ? undefined : +a.dataset.seg }); break;
+    case 'mini-map': MiniMap.open(a); break;
+    case 'mini-close': MiniMap.close(); break;
     case 'map-circuit': UI.go('mapa'); MapView.show({ type: 'circuit', id }); break;
     case 'map-prev': MapView.step(-1); break;
     case 'map-next': MapView.step(1); break;
