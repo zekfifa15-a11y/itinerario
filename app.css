@@ -483,3 +483,22 @@ table.kt tr.tot td{font-weight:800;border-bottom:0;background:var(--paper-2)}
 .minimap .mm-bar span{flex:1 1 100%;display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:var(--muted);min-width:0}
 .mm-dot{width:14px;height:14px;border-radius:50%;background:#6F4FD8;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
 .mm-dot.end{background:#159A5B}
+/* v6.4: rain mode, map filters, segment tips */
+.rainbtn{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 10px;border-radius:999px;border:1px solid color-mix(in srgb,#fff 28%,transparent);background:color-mix(in srgb,#fff 10%,transparent);color:#fff;font:800 12px/1 var(--sans);cursor:pointer;white-space:nowrap}
+.rainbtn.on{background:#1C7ED6;border-color:#1C7ED6;box-shadow:0 0 0 2px color-mix(in srgb,#1C7ED6 35%,transparent)}
+.rainbtn span[aria-hidden]{font-size:15px}
+@media (max-width:400px){.rainbtn .rl{display:none}.rainbtn{padding:0 8px}}
+.callout.rain{margin-top:10px;background:color-mix(in srgb,#1C7ED6 10%,var(--card));border-color:color-mix(in srgb,#1C7ED6 40%,var(--line));color:var(--ink);font-size:13px;line-height:1.45;display:block}
+.leg .m.rain{background:color-mix(in srgb,#1C7ED6 14%,transparent);color:#1C7ED6;border-radius:6px;padding:1px 6px;font-weight:800}
+.segtip{margin:-2px 0 6px 28px;font-size:12.5px;line-height:1.45;color:var(--ink-2);background:color-mix(in srgb,var(--gold) 8%,transparent);border-left:3px solid color-mix(in srgb,var(--gold) 55%,transparent);padding:6px 8px;border-radius:0 8px 8px 0}
+.map-ctl{position:absolute;left:10px;top:72px;z-index:4;display:flex;flex-direction:column;gap:6px;max-width:calc(100% - 76px)}
+.map-ctl[hidden]{display:none}
+.lg-ctl{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.lg-ctl .seg,.lg-ctl .stepper{display:inline-flex;align-items:center;gap:2px;padding:3px;border-radius:12px;background:color-mix(in srgb,var(--card) 94%,transparent);box-shadow:var(--shadow);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.lg-ctl .seg button{border:0;background:transparent;color:var(--ink-2);font:800 12px/1 var(--sans);padding:7px 11px;border-radius:9px;cursor:pointer}
+.lg-ctl .seg button.on{background:var(--cobalt);color:#fff}
+.lg-ctl .stepper button{border:0;background:transparent;color:var(--ink);width:32px;height:30px;border-radius:9px;display:grid;place-items:center;cursor:pointer}
+.lg-ctl .stepper button:active{background:var(--paper-2)}
+.lg-ctl .stepper span{font:800 12px/1 var(--sans);color:var(--ink-2);padding:0 4px;white-space:nowrap}
+.map-legend .lg-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;row-gap:4px}
+@media (max-width:440px){.netpill .nt{display:none}.netpill{padding:9px;justify-content:center}.top-actions{gap:6px}}

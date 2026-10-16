@@ -2,7 +2,7 @@
    Data: window.TRIP (data.js). Map: MapLibre GL + PMTiles (OpenMapTiles/OpenFreeMap, © OpenStreetMap). */
 'use strict';
 const TRIP = window.TRIP;
-const VERSION = '6.3.0';
+const VERSION = '6.4.0';
 const STORE = 'ist-a-dois-v6';
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
@@ -97,7 +97,10 @@ const I = {
   commuteTxt: ['Já inclui 10 min de folga para o bonde cheio de manhã e 10 min para chegar à sala antes das {c}. Café da manhã em casa (lista de mercado no dia 21).', 'Includes 10 min of slack for the packed morning tram and 10 min to reach the classroom before {c}. Breakfast at home (grocery list on 21 Oct).', 'Sabah kalabalık tramvay için 10 dk pay ve {c} öncesi sınıfa varmak için 10 dk dahil. Kahvaltı evde (market listesi 21 Ekim’de).'],
   classAt: ['aula', 'class', 'ders'], fBreakfast: ['Café da manhã', 'Breakfast', 'Kahvaltı'],
   idaT: ['Ida', 'Outbound', 'Gidiş'], voltaT: ['Volta', 'Return', 'Dönüş'], walkS: ['a pé', 'walk', 'yürüyüş'], rideS: ['transporte', 'transit', 'ulaşım'],
-  stepMap: ['Ver no mapa', 'See on map', 'Haritada gör'], miniTap: ['Toque para abrir o mapa e arrastar', 'Tap to open the map and drag', 'Haritayı açıp kaydırmak için dokunun'], miniHint: ['Arraste e use dois dedos para zoom', 'Drag; pinch with two fingers to zoom', 'Kaydırın; yakınlaştırmak için iki parmak'], fullMap: ['Tela cheia', 'Full screen', 'Tam ekran'], lineDiag: ['Estações em ordem — confira o nome na placa', 'Stations in order — check the name on the sign', 'Sırasıyla duraklar — tabeladaki adı kontrol edin'],
+  stepMap: ['Ver no mapa', 'See on map', 'Haritada gör'], rainT: ['Chuva', 'Rain', 'Yağmur'], rainOnT: ['Modo chuva ligado', 'Rain mode on', 'Yağmur modu açık'], rainOffT: ['Modo chuva desligado', 'Rain mode off', 'Yağmur modu kapalı'],
+  rainBanner: ['☔ Modo chuva: {n} trechos longos a pé viraram bonde/metrô e os horários foram recalculados. Onde não há transporte, é guarda-chuva — os trechos a pé que sobraram estão marcados com ☂.', '☔ Rain mode: {n} long walks became tram/metro and the times were recalculated. Where there is no transport, take an umbrella — the remaining walks are marked ☂.', '☔ Yağmur modu: {n} uzun yürüyüş tramvay/metroya çevrildi, saatler yeniden hesaplandı. Ulaşım olmayan yerlerde şemsiye — kalan yürüyüşler ☂ ile işaretli.'],
+  rainNone: ['☔ Modo chuva: hoje não há trecho longo a pé que dê para trocar por transporte — leve guarda-chuva nos trechos ☂.', '☔ Rain mode: no long walk today can be swapped for transport — take an umbrella on the ☂ walks.', '☔ Yağmur modu: bugün ulaşımla değiştirilebilecek uzun yürüyüş yok — ☂ yürüyüşlerde şemsiye alın.'],
+  rainLeg: ['☔ trocado por transporte', '☔ swapped for transport', '☔ ulaşımla değiştirildi'], dirAll: ['Tudo', 'All', 'Hepsi'], dirIda: ['Ida', 'Out', 'Gidiş'], dirVolta: ['Volta', 'Back', 'Dönüş'], legOf: ['Trecho {i} de {n}', 'Leg {i} of {n}', 'Bölüm {i}/{n}'], allLegs: ['Todos os trechos', 'All legs', 'Tüm bölümler'], miniTap: ['Toque para abrir o mapa e arrastar', 'Tap to open the map and drag', 'Haritayı açıp kaydırmak için dokunun'], miniHint: ['Arraste e use dois dedos para zoom', 'Drag; pinch with two fingers to zoom', 'Kaydırın; yakınlaştırmak için iki parmak'], fullMap: ['Tela cheia', 'Full screen', 'Tam ekran'], lineDiag: ['Estações em ordem — confira o nome na placa', 'Stations in order — check the name on the sign', 'Sırasıyla duraklar — tabeladaki adı kontrol edin'],
   boardHere: ['EMBARQUE AQUI', 'BOARD HERE', 'BURADAN BİN'], changeHere: ['DESÇA E TROQUE → {l}', 'GET OFF, CHANGE → {l}', 'İN, AKTARMA → {l}'], transferSigns: ['baldeação: siga as placas “{x}”', 'transfer: follow the “{x}” signs', 'aktarma: “{x}” tabelalarını izleyin'], walkToSt: ['a pé até a estação {x}', 'walk to {x} station', '{x} istasyonuna yürüyüş'], offHere: ['DESÇA AQUI', 'GET OFF HERE', 'BURADA İN'], dontOff: ['não desça', 'stay on', 'inme'],
   stopOf: ['parada {i} de {n}', 'stop {i} of {n}', '{n} duraktan {i}.'], walkTo: ['a pé até o Airbnb', 'walk to the Airbnb', 'Airbnb’ye yürüyüş'],
   kartT: ['Istanbulkart: quanto carregar', 'Istanbulkart: how much to load', 'İstanbulkart: ne kadar yüklenmeli'], kartLoad: ['Carregue no aeroporto', 'Load at the airport', 'Havalimanında yükleyin'],
@@ -163,6 +166,8 @@ function loadState() {
   let s = null;
   try { s = JSON.parse(localStorage.getItem(STORE) || 'null'); } catch (e) { s = null; }
   if (!s || s.v !== 6) s = { v: 6, done: {}, trash: [], additions: {}, custom: [], steps: {}, lang: null, day: null };
+  if (s.rain === undefined) s.rain = false;
+  if (!s.mapDir) s.mapDir = 'all';
   s.done ||= {}; s.trash ||= []; s.additions ||= {}; s.custom ||= []; s.steps ||= {};
   return s;
 }
@@ -208,6 +213,7 @@ const kindLabel = p => p.kind === 'food' ? t('kFood') : p.kind === 'shop' ? t('k
 const kindIcon = p => p.kind === 'food' ? 'food' : p.kind === 'shop' ? 'shop' : p.kind === 'transport' ? 'ferry' : p.church ? 'church' : p.id === 'base' ? 'home' : p.id === 'university' ? 'cap' : 'star';
 const phHTML = (id, cls = '') => { const u = photoURL(id); const p = PL[id] || {}; return `<div class="ph ${cls}">${u ? `<img src="${u}" alt="" loading="lazy" decoding="async">` : ic(kindIcon(p))}</div>`; };
 const googleURL = p => {
+  if (p.gid) return `https://www.google.com/maps/search/?${new URLSearchParams({ api: '1', query: p.name.split(' · ')[0], query_place_id: p.gid })}`;
   for (const u of [p.mapsUrl, p.source]) if (u && /^(https:\/\/maps\.app\.goo\.gl|https:\/\/share\.google|https:\/\/(www|maps)\.google\.com\/maps\/(place|search))/.test(u)) return u;
   if (p.custom || !p.address) return `https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;
   return `https://www.google.com/maps/search/?${new URLSearchParams({ api: '1', query: `${p.name}, ${p.address}, İstanbul, Türkiye` })}`;
@@ -301,7 +307,7 @@ function schedule(day) {
   while (rest.length) {
     const cands = rest.map(id => {
       const p = PL[id], inf = infoOf(p, wd), tr = travelMin(cur, p);
-      const op = inf.open ?? (p.kind === 'food' ? (['dogaciyiz', 'hafiz', 'beyzade'].includes(id) ? 540 : 690) : 540);
+      const op = Math.max(inf.open ?? (p.kind === 'food' ? (['dogaciyiz', 'hafiz', 'beyzade'].includes(id) ? 540 : 690) : 540), (day.at && hm(day.at[id])) || 0);
       const arr = tm + tr, st = Math.max(arr, op, isMeal(p, day) ? 1080 : 0, p.kind === 'food' ? lastFood + FOOD_GAP : 0);
       return { id, p, inf, tr, st, wait: st - arr, km: hav(cur, p) };
     }).filter(c => (!c.inf.close || c.st + c.inf.duration <= c.inf.close) && (dl === undefined || (!c.p.unmapped && !c.inf.reservation && c.st + c.inf.duration + travelMin(c.p, PL[day.end]) <= dl)));
@@ -312,7 +318,8 @@ function schedule(day) {
     pool.sort((a, b) => nw.length ? a.km - b.km || a.tr - b.tr : a.st - b.st || a.km - b.km);
     const first = out.length === 0 && cs.find(c => c.id === day.firstStop);
     const g = geo.find(id => cs.some(c => c.id === id));
-    const pick = (g && cs.find(c => c.id === g)) || first || pool[0];
+    const fx = day.fixedOrder && cs.find(c => c.id === rest.find(r => cs.some(x => x.id === r)));
+    const pick = fx || (g && cs.find(c => c.id === g)) || first || pool[0];
     if (pick.p.kind === 'food') lastFood = pick.st;
     unknown = unknown || !!pick.p.unmapped || !!pick.inf.reservation;
     // a long wait close to home → go back to the Airbnb and leave again at the right time
@@ -330,9 +337,12 @@ function schedule(day) {
 
 /* ---------------- legs & routes ---------------- */
 const ROUTES = TRIP.routes;
+/* rain mode: a long walk has a precomputed tram/metro alternative under key~rain */
+const rkey = key => (S.rain && ROUTES[key + '~rain']) ? key + '~rain' : key;
+const routeOf = (a, b) => ROUTES[rkey(`${a.id}__${b.id}`)];
 function legMode(a, b) {
   const key = `${a.id}__${b.id}`;
-  if (ROUTES[key]) return ROUTES[key].mode === 'transit' ? 'transit' : 'walking';
+  if (routeOf(a, b)) return routeOf(a, b).mode === 'transit' ? 'transit' : 'walking';
   if (a.unmapped || b.unmapped) return 'unknown';
   const cross = sideOf(a) !== sideOf(b), c = ['blue', 'topkapi', 'cistern'];
   const coast = ['uskudar__kuzguncuk', 'kuzguncuk__patata'].includes(key);
@@ -352,7 +362,7 @@ const legMemo = new Map();
 /* door-to-door minutes for the scheduler: real planned routes (+3 min to find the platform/stop) or the heuristic */
 function travelMin(a, b) {
   if (!a || !b || a.unmapped || b.unmapped) return 0;
-  const r = ROUTES[`${a.id}__${b.id}`];
+  const r = routeOf(a, b);
   if (r) return Math.ceil(r.segs.reduce((x, s) => x + segMin(s), 0)) + (r.mode === 'transit' ? 3 : 0);
   return K(a, b);
 }
@@ -364,7 +374,7 @@ function segTimes(r, leave) {
 }
 /* returns {mode, segs, d, est} — uses precomputed routes, the offline walking graph, or a straight line */
 function legRoute(a, b) {
-  const pre = ROUTES[`${a.id}__${b.id}`];
+  const pre = routeOf(a, b);
   if (pre) return { ...pre, est: pre.segs.reduce((x, s) => x + segMin(s), 0), source: 'plan' };
   const mode = legMode(a, b);
   if (mode === 'walking' && Walk.ready) {
@@ -795,11 +805,13 @@ const MapView = {
       return r;
     };
     const doneIdx = new Set(md.stops.filter(s => S.done[s.id]).map(s => s.id));
+    const dirOk = l => !(this.ctx && (this.ctx.type === 'day' || this.ctx.type === 'leg' || this.ctx.type === 'circuit')) || S.mapDir === 'all' || (S.mapDir === 'volta' ? !!l.v : !l.v);
     for (const l of md.legs) {
+      if (!dirOk(l)) continue;
       const faded = md.focus ? l.key !== md.focus : l.key === 'ist__base' ? !!S.steps['arr:sishane'] : (doneIdx.has(l.to) && (doneIdx.has(l.from) || l.from === 'base' || l.from === 'university'));
       addRoute(l.key, faded, l.v);
     }
-    if (md.brk) for (const { b, sc } of md.brk) for (const l of markBack(b, legsOf(b, sc.stops))) addRoute(l.key, true, l.v);
+    if (md.brk) for (const { b, sc } of md.brk) for (const l of markBack(b, legsOf(b, sc.stops))) if (dirOk(l)) addRoute(l.key, true, l.v);
     this.map.getSource('plan').setData({ type: 'FeatureCollection', features: feats });
     // markers
     this.markers.forEach(mk => mk.remove()); this.markers = [];
@@ -877,9 +889,21 @@ const MapView = {
       <button class="mt ${this.ctx && (this.ctx.type === 'all' || this.ctx.type === 'place') ? 'on' : ''}" data-act="map-all" aria-label="${esc(t('allPlaces'))}">${ic('layers')}</button>
       <button class="mt" data-act="nav-home" aria-label="${esc(t('homeBtn'))}">${ic('home')}</button>`;
   },
+  dayLegs() { const md = this.md || {}; return (md.legs || []).filter(l => !isAir(l.key)); },
+  legStep(d) {
+    const c = this.ctx || {}, legs = this.dayLegs(); if (!legs.length) return;
+    const dayId = c.dayId || currentDay().id;
+    let i = c.type === 'leg' ? legs.findIndex(l => l.key === c.key) : -1;
+    i = i + d; if (i < -1) i = legs.length - 1; if (i >= legs.length) i = -1;
+    if (i === -1) this.show({ type: 'day', dayId }); else this.show({ type: 'leg', dayId, key: legs[i].key });
+  },
   renderLegend() {
-    const v = (this.md && this.md.legs || []).some(l => l.v);
-    $('#mapLegend').innerHTML = `<span><b>${esc(t('idaT'))}</b></span><span><i class="lg-walk"></i>${esc(t('walkS'))}</span><span><i class="lg-ride"></i>${esc(t('rideS'))}</span>${v ? `<span class="sep"></span><span><b>${esc(t('voltaT'))}</b></span><span><i class="lg-walk v"></i>${esc(t('walkS'))}</span><span><i class="lg-ride v"></i>${esc(t('rideS'))}</span>` : ''}`;
+    const v = (this.md && this.md.legs || []).some(l => l.v), c = this.ctx || {};
+    const legs = (c.type === 'day' || c.type === 'leg') ? this.dayLegs() : [], li = c.type === 'leg' ? legs.findIndex(l => l.key === c.key) : -1;
+    const dirBtn = (k, lbl) => `<button class="${S.mapDir === k ? 'on' : ''}" data-act="map-dir" data-dir="${k}">${esc(t(lbl))}</button>`;
+    const ctl = legs.length > 1 ? `<div class="lg-ctl"><div class="seg">${dirBtn('all', 'dirAll')}${dirBtn('ida', 'dirIda')}${v ? dirBtn('volta', 'dirVolta') : ''}</div><div class="stepper"><button data-act="map-step" data-d="-1" aria-label="prev">${ic('chevL', 's')}</button><span>${esc(li >= 0 ? t('legOf', { i: li + 1, n: legs.length }) : t('allLegs'))}</span><button data-act="map-step" data-d="1" aria-label="next">${ic('chevR', 's')}</button></div></div>` : '';
+    $('#mapCtl').innerHTML = ctl; $('#mapCtl').hidden = !ctl;
+    $('#mapLegend').innerHTML = `<div class="lg-row"><span><b>${esc(t('idaT'))}</b></span><span><i class="lg-walk"></i>${esc(t('walkS'))}</span><span><i class="lg-ride"></i>${esc(t('rideS'))}</span>${v ? `<span class="sep"></span><span><b>${esc(t('voltaT'))}</b></span><span><i class="lg-walk v"></i>${esc(t('walkS'))}</span><span><i class="lg-ride v"></i>${esc(t('rideS'))}</span>` : ''}</div>`;
   },
   select(id) {
     this.sel = id; $$('.mk').forEach(m => m.classList.toggle('sel', m.dataset.id === id));
@@ -984,7 +1008,7 @@ const Nav = {
     const tg = this.target, prev = this.fromId ? PL[this.fromId] : null;
     const here = pos && inIstanbul(pos) ? { id: 'current', lat: pos.lat, lng: pos.lng } : null;
     let r = null, note = '', origin = here || prev || PL.base;
-    const plan = prev ? ROUTES[`${prev.id}__${tg.id}`] : null;
+    const plan = prev ? routeOf(prev, tg) : null;
     if (here && plan && plan.mode === 'transit' && hav(here, prev) < 0.35) { r = { ...plan }; note = t('navPlan'); origin = prev; }
     else if (here && sideOf(here) === sideOf(tg) && hav(here, tg) < 4.5 && Walk.ready && Walk.inBox(here) && Walk.inBox(tg)) { const w = Walk.route(here, tg); if (w) { r = { mode: 'walk', segs: [{ m: 'walk', c: w.c, d: w.d }], d: w.d }; note = t('navWalk'); } }
     if (!r && plan) { r = { ...plan }; note = (here ? '' : (pos ? t('gpsFar') + ' ' : '')) + (plan.mode === 'transit' ? t('navPlan') : t('navWalkPlan')); origin = prev; }
@@ -1073,8 +1097,8 @@ function currentDay() { return dayById(S.day) || DAYS.find(d => d.date === today
 const dayLabel = d => d.number ? `${t('day')} ${d.number}` : d.date === '2026-10-21' ? t('arrivalDay') : d.departure ? t('departureDay') : t('extra');
 const dayPlaces = d => [...new Set([...d.stops.map(s => s.id), ...(S.additions[d.id] || [])])];
 const whereScheduled = id => { const out = []; for (const d of DAYS) if (dayPlaces(d).includes(id)) out.push(d.id); for (const b of TRIP.breaks) if (b.stops.some(s => s.id === id)) out.push(b.date); return out; };
-const gBtn = (p, cls = '') => p.custom ? '' : `<a class="btn gbtn ${cls}" href="${esc(googleURL(p))}" target="_blank" rel="noopener">${ic('gmaps', 's')}<span>${esc(t('googleSee'))}</span></a>`;
-const gIcon = p => p.custom ? '' : `<a class="btn sm icon" href="${esc(googleURL(p))}" target="_blank" rel="noopener" aria-label="Google">${ic('gmaps', 's')}</a>`;
+const gBtn = (p, cls = '') => p.custom || p.noGoogle ? '' : `<a class="btn gbtn ${cls}" href="${esc(googleURL(p))}" target="_blank" rel="noopener">${ic('gmaps', 's')}<span>${esc(t('googleSee'))}</span></a>`;
+const gIcon = p => p.custom || p.noGoogle ? '' : `<a class="btn sm icon" href="${esc(googleURL(p))}" target="_blank" rel="noopener" aria-label="Google">${ic('gmaps', 's')}</a>`;
 
 /* ---------------- UI ---------------- */
 
@@ -1166,7 +1190,7 @@ const UI = {
         <div class="hero-in"><div class="hero-k"><span class="chip gold">${esc(dayLabel(d))}</span><span class="chip">${ic('cal', 'xs')}${esc(fmtDate(d.date, { weekday: 'long', day: 'numeric', month: 'long' }))}</span></div>
         <h1>${esc(L(d.title))}</h1><div class="area">${esc(L(d.area))}</div>
         <div class="hero-k" style="margin:10px 0 0">${ci.classes.length ? `<span class="chip">${ic('cap', 'xs')}${esc(t('classesT'))}</span>` : `<span class="chip">${ic('heart', 'xs')}${esc(t('noClass'))}</span>`}${all.length ? `<span class="chip">${ic('pin', 'xs')}${all.length} ${esc(all.length === 1 ? t('stop1') : t('stops'))}</span>` : ''}${clk ? `<span class="chip clk">⏰ ${esc(t('wakeT'))} ${clk.wake} · ${esc(t('leaveT'))} ${clk.leave}</span>` : ''}</div></div></div>
-      <p class="note">${esc(L(d.note))}</p>
+      <p class="note">${esc(L(d.note))}</p>${this.rainBanner(d)}
       <div class="card trip-prog"><div style="flex:1"><b>${doneN} / ${totalPl.size}</b> <small>${esc(t('tripProg'))}</small><div class="bar" style="margin-top:7px"><i style="width:${totalPl.size ? doneN / totalPl.size * 100 : 0}%"></i></div></div><button class="btn sm" data-act="map-day" data-day="${d.id}">${ic('map', 's')}${esc(t('mapBtn'))}</button></div>`;
     if (Vault.has() && !Vault.unlocked && Vault.dates().includes(d.date)) h += this.lockCard(false);
     const tk = ticketOf(d.date), rs = Vault.reservations(d.date);
@@ -1230,7 +1254,8 @@ const UI = {
     const rides = r.segs.filter(s => s.m !== 'walk');
     const cls = rides.length ? (r.segs.some(s => s.m === 'walk') ? 'mix' : 'ride') : '';
     const doneLeg = S.done[leg.to];
-    const label = rides.length ? rides.map(s => `<span class="m ride">${ic(MODEIC[s.m] || 'tram', 'xs')}${esc(s.line && s.m !== 'bus' ? s.line : t(s.m === 'ride' ? 'transit' : s.m))}</span>`).join('') : `<span class="m">${ic('walk', 'xs')}${esc(t('walk'))}</span>`;
+    const rainTag = S.rain && ROUTES[key + '~rain'] ? `<span class="m rain">${esc(t('rainLeg'))}</span>` : (S.rain && !rides.length && r.d >= 250 ? '<span class="m rain">☂</span>' : '');
+    const label = rainTag + (rides.length ? rides.map(s => `<span class="m ride">${ic(MODEIC[s.m] || 'tram', 'xs')}${esc(s.line && s.m !== 'bus' ? s.line : t(s.m === 'ride' ? 'transit' : s.m))}</span>`).join('') : `<span class="m">${ic('walk', 'xs')}${esc(t('walk'))}</span>`);
     const open = this.openLeg.has(d.id + key);
     const lv = tm.leave && hm(tm.leave) !== undefined ? `<span class="lv${tm.back ? ' back' : ''}">${ic('clock', 'xs')}${esc(tm.back ? t('voltaT') : t('leaveT'))} ${tm.leave}${tm.arr && tm.arr !== '—' ? ` → ${tm.arr}` : ''}</span>` : '';
     return `<li class="leg ${cls}${doneLeg ? ' faded' : ''}${tm.back ? ' back' : ''}"><div style="flex:1;min-width:0"><button class="legbtn" data-act="leg-open" data-key="${esc(d.id + key)}">${lv}${label}<span>${fmtDist(r.d)} · ~${fmtMin(r.est)}</span>${prevHidden ? `<span class="dim">· ${esc(t('routeFrom'))} ${esc(a.name)}</span>` : ''}${r.source === 'line' && r.mode !== 'walk' ? `<span class="dim">· ${esc(t('checkConn'))}</span>` : ''}</button>
@@ -1240,11 +1265,11 @@ const UI = {
     const T = leave ? segTimes(r, leave) : null;
     return `<div class="legsteps">` + r.segs.map((s, i) => {
       const tt = T ? T[i] : null, clock = tt ? `<span class="tt">${tt.dep}</span>` : '';
-      if (s.m === 'walk') return `<div>${clock}${ic('walk', 's')}<span><b>${esc(t('walk'))}</b> · ${fmtDist(s.d)} · ~${fmtMin(segMin(s))}${s.straight ? ' · ' + esc(t('approx')) : ''}</span></div>`;
+      if (s.m === 'walk') return `<div>${clock}${ic('walk', 's')}<span><b>${esc(t('walk'))}</b>${S.rain && s.d >= 250 ? ' ☂' : ''} · ${fmtDist(s.d)} · ~${fmtMin(segMin(s))}${s.straight ? ' · ' + esc(t('approx')) : ''}</span></div>`;
       if (s.m === 'ride') return `<div>${clock}${ic('tram', 's')}<span><b>${esc(t('transit'))}</b> · ${fmtDist(s.d)} · ${esc(t('checkConn'))}</span></div>`;
       const nm = s.m === 'bus' ? `${t('bus')} ${s.line}` : s.m === 'ferry' ? t('ferry') : `${t(s.m)} ${s.line}`;
       const extra = s.dir ? ` · ${t('towards')} ${s.dir}${s.n ? ` · ${s.n} ${t('stopsN')}` : ''}` : s.op ? ` · ${s.op}` : '';
-      return `<div>${clock}${ic(MODEIC[s.m], 's')}<span><b>${esc(nm)}</b> · ${esc(s.from)} → ${esc(s.to)}${esc(extra)} · ~${fmtMin(segMin(s))}${tt ? ` · <b>${esc(t('alightT'))} ~${tt.arr}</b>` : ''}</span></div>`;
+      return `<div>${clock}${ic(MODEIC[s.m], 's')}<span><b>${esc(nm)}</b> · ${esc(s.from)} → ${esc(s.to)}${esc(extra)} · ~${fmtMin(segMin(s))}${tt ? ` · <b>${esc(t('alightT'))} ~${tt.arr}</b>` : ''}</span></div>${s.tip ? `<div class="segtip">${esc(L(s.tip))}</div>` : ''}`;
     }).join('') + (T && T.length ? `<div>${`<span class="tt">${T[T.length - 1].arr}</span>`}${ic('pin', 's')}<span><b>${esc(t('arrT'))}</b></span></div>` : '') + `</div>`;
   },
   stopCard(p, s, n, d, isNext) {
@@ -1289,7 +1314,7 @@ const UI = {
     if (ci.classes.length && !ci.arrival) { const r = legRoute(PL.base, PL.university); h += `<div class="callout green commute" style="margin-top:10px">${ic('cap')}<div><strong>${esc(t('commuteT'))}</strong><div class="clockrow"><span>⏰ ${esc(t('wakeT'))} <b>${ci.wake}</b></span><span>🏠 ${esc(t('leaveT'))} <b>${ci.departure}</b></span><span>🎓 ${esc(t('classAt'))} <b>${ci.classes[0].start}</b></span></div>${this.legSteps(r, ci.departure)}<p style="margin:6px 0 0;font-size:12.5px">${esc(t('commuteTxt', { c: ci.classes[0].start }))}</p></div></div>`; }
     if (ci.classes.length && !ci.arrival) h += `<div class="links" style="margin-top:8px"><button class="btn sm" data-act="map-route" data-key="base__university">${ic('tram', 's')}${esc(t('facT'))}</button><button class="btn sm ghost" data-tab="intervalo">${ic('clock', 's')}${esc(t('tabIntervalo'))}</button></div>`;
     if (ci.classes.length && !d.departure && d.fromFaculty) h += `<div class="callout blue" style="margin-top:10px">${ic('heart')}<div><strong>${esc(t('outing'))} · ${esc(d.startTime)}</strong><br>${esc(L(G.classOuting).replace('{end}', ci.classes[ci.classes.length - 1].end).replace('{start}', d.startTime))}</div></div>`;
-    else if (ci.classes.length && !d.departure) h += `<div class="callout blue" style="margin-top:10px">${ic('heart')}<div><strong>${esc(t('outing'))} · ${ci.outingStart}</strong><br>${esc(t('outingTxt', { a: ci.earliestHomeArrival }))}</div></div>`;
+    else if (ci.classes.length && !d.departure && !d.special) h += `<div class="callout blue" style="margin-top:10px">${ic('heart')}<div><strong>${esc(t('outing'))} · ${ci.outingStart}</strong><br>${esc(t('outingTxt', { a: ci.earliestHomeArrival }))}</div></div>`;
     return h + '</div>';
   },
   lockCard(big) {
@@ -1321,14 +1346,14 @@ const UI = {
   arrivalCard() {
     const G = TRIP.guide, steps = TRIP.arrival;
     const pend = steps.filter(s => !S.steps['arr:' + s.id]), done = steps.filter(s => S.steps['arr:' + s.id]);
-    const stepHTML = (s, i) => `<li class="step ${s.kind === 'transit' ? 'ride' : s.id === 'atm' ? 'gold' : ''}"><span class="sn">${i + 1}</span><div class="st"><b>${esc(L(s.title))}</b>${esc(L(s.text))}${s.instructions ? `<ol>${s.instructions.map(x => `<li>${esc(L(x))}</li>`).join('')}</ol>` : ''}${ARR_SEG[s.id] !== undefined && (TRIP.arrThumbs || {})[s.id] ? `<button class="arrthumb" data-act="mini-map" data-key="ist__base" data-seg="${ARR_SEG[s.id]}"><img src="${TRIP.arrThumbs[s.id]}" alt="" loading="lazy"><span>${ic('hand', 'xs')}${esc(t('miniTap'))}</span></button>` : ''}<div class="links">${ARR_SEG[s.id] !== undefined ? `<button class="btn sm" data-act="map-seg" data-seg="${ARR_SEG[s.id]}">${ic('map', 's')}${esc(t('stepMap'))}</button>` : ''}${s.href ? `<a href="${esc(s.href)}" target="_blank" rel="noopener">${ic('ext', 's')}${esc(L(s.link))}</a>` : ''}${s.alternativeHref ? `<a href="${esc(s.alternativeHref)}" target="_blank" rel="noopener">${ic('ext', 's')}${esc(L(s.alternativeLink))}</a>` : ''}</div></div><button class="chk ${S.steps['arr:' + s.id] ? 'on' : ''}" data-act="step" data-step="arr:${s.id}" aria-label="ok">${ic('check', 's')}</button></li>`;
+    const stepHTML = (s, i) => `<li class="step ${s.kind === 'transit' ? 'ride' : s.id === 'atm' ? 'gold' : ''}"><span class="sn">${i + 1}</span><div class="st"><b>${esc(L(s.title))}</b>${esc(L(s.text))}${s.instructions ? `<ol>${s.instructions.map(x => `<li>${esc(L(x))}</li>`).join('')}</ol>` : ''}${s.id === 'istanbulkart' ? this.kartCard(true, true) : ''}${ARR_SEG[s.id] !== undefined && (TRIP.arrThumbs || {})[s.id] ? `<button class="arrthumb" data-act="mini-map" data-key="ist__base" data-seg="${ARR_SEG[s.id]}"><img src="${TRIP.arrThumbs[s.id]}" alt="" loading="lazy"><span>${ic('hand', 'xs')}${esc(t('miniTap'))}</span></button>` : ''}<div class="links">${ARR_SEG[s.id] !== undefined ? `<button class="btn sm" data-act="map-seg" data-seg="${ARR_SEG[s.id]}">${ic('map', 's')}${esc(t('stepMap'))}</button>` : ''}${s.href ? `<a href="${esc(s.href)}" target="_blank" rel="noopener">${ic('ext', 's')}${esc(L(s.link))}</a>` : ''}${s.alternativeHref ? `<a href="${esc(s.alternativeHref)}" target="_blank" rel="noopener">${ic('ext', 's')}${esc(L(s.alternativeLink))}</a>` : ''}</div></div><button class="chk ${S.steps['arr:' + s.id] ? 'on' : ''}" data-act="step" data-step="arr:${s.id}" aria-label="ok">${ic('check', 's')}</button></li>`;
     return `<div class="card panel sec"><div class="eyebrow">${esc(L(G.arrHeader))}</div><h3>${esc(L(G.arrTitle))}</h3><p style="font-weight:700">${esc(L(G.arrLanding))}</p><p style="font-size:12.5px;color:var(--muted)">${esc(L(G.arrChain))}</p>
       <div class="callout" style="margin:10px 0">${ic('clock')}<div>${esc(L(G.arrPlan))}</div></div>
       <button class="btn sm" data-act="map-route" data-key="ist__base">${ic('map', 's')}${esc(t('seeOnMap'))}</button>
-      ${this.lineDiagram()}
-      <ol class="steps">${pend.map(s => stepHTML(s, steps.indexOf(s))).join('')}</ol>
+      ${(() => { const iM = steps.findIndex(s => s.id === 'm11'), pre = pend.filter(s => steps.indexOf(s) < iM), post = pend.filter(s => steps.indexOf(s) >= iM);
+        return `${pre.length ? `<ol class="steps">${pre.map(s => stepHTML(s, steps.indexOf(s))).join('')}</ol>` : ''}${post.length ? this.lineDiagram() : ''}${post.length ? `<ol class="steps">${post.map(s => stepHTML(s, steps.indexOf(s))).join('')}</ol>` : ''}`; })()}
       ${done.length ? `<details class="fold" open><summary><span class="ic">${ic('check', 's')}</span>${esc(t('doneT'))}<span class="cnt">${done.length}</span><span class="chev">${ic('chevD', 's')}</span></summary><div class="rows">${done.map(s => `<div class="row done"><span class="tick">${ic('check', 'xs')}</span><div class="rt"><b>${esc(L(s.title))}</b></div><button class="btn sm" data-act="step" data-step="arr:${s.id}">${ic('undo', 's')}</button></div>`).join('')}</div></details>` : ''}
-      <h3 style="margin-top:16px;font-size:16px">${esc(L(G.fareTitle))}</h3><table class="fares">${TRIP.fares.map(([k, v]) => `<tr><td>${esc(L(k))}</td><td>${esc(v)}</td></tr>`).join('')}</table><p style="font-size:12px;color:var(--muted)">${esc(L(G.fareNote))}</p>${this.kartCard(true, true)}</div>`;
+      <h3 style="margin-top:16px;font-size:16px">${esc(L(G.fareTitle))}</h3><table class="fares">${TRIP.fares.map(([k, v]) => `<tr><td>${esc(L(k))}</td><td>${esc(v)}</td></tr>`).join('')}</table><p style="font-size:12px;color:var(--muted)">${esc(L(G.fareNote))}</p></div>`;
   },
   groceryCard() {
     const G = TRIP.guide; if (!G.grocery) return '';
@@ -1475,10 +1500,23 @@ const UI = {
       <div class="files">${MapPack.files.map((f, i) => `<div><span>${esc(I.mpFiles[i][LI[LANG]])}</span><span class="${MapPack.have[f.url] ? 'okk' : ''}">${MapPack.have[f.url] ? '✓ ' : ''}${(f.size / 1048576).toFixed(1).replace('.', LANG === 'en' ? '.' : ',')} MB</span></div>`).join('')}</div>
       ${!dl ? `<button class="btn ${ready ? 'ghost' : 'pri'} wide" style="margin-top:12px" data-act="mp-dl" ${navigator.onLine ? '' : 'disabled'}>${ic('dl', 's')}${esc(ready ? t('mpAgain') : t('mpBtn'))}</button>` : ''}`;
   },
+  rainBanner(d) {
+    if (!S.rain) return '';
+    const sc = schedule(d); let n = 0;
+    const cnt = x => { const s2 = schedule(x); for (const l of legsOf(x, s2.stops)) if (ROUTES[l.key + '~rain']) n++; };
+    cnt(d); for (const b of TRIP.breaks.filter(b => b.date === d.date)) cnt(b);
+    return `<div class="callout rain">${n ? esc(t('rainBanner', { n })) : esc(t('rainNone'))}</div>`;
+  },
+  renderRain() {
+    const b = $('#rainbtn'); if (!b) return;
+    b.classList.toggle('on', !!S.rain); b.setAttribute('aria-pressed', S.rain ? 'true' : 'false');
+    b.innerHTML = `<span aria-hidden="true">${S.rain ? '☔' : '☂'}</span><span class="rl">${esc(t('rainT'))}</span>`;
+  },
   renderNet() {
+    this.renderRain();
     const el = $('#netpill'); const on = navigator.onLine, st = MapPack.state;
     el.className = 'netpill' + (st === 'downloading' ? ' dl' : on ? '' : ' off');
-    el.innerHTML = `<span class="dot"></span>${esc(st === 'downloading' ? `${t('mapDl')} ${MapPack.pct}%` : st === 'ready' ? (on ? t('offReady') : t('noNetReady')) : on ? t('online') : t('offline'))}`;
+    el.innerHTML = `<span class="dot"></span><span class="nt">${esc(st === 'downloading' ? `${t('mapDl')} ${MapPack.pct}%` : st === 'ready' ? (on ? t('offReady') : t('noNetReady')) : on ? t('online') : t('offline'))}</span>`;
   },
 
   /* ---------- actions ---------- */
@@ -1554,6 +1592,9 @@ document.addEventListener('click', e => {
     case 'map-route': UI.go('mapa'); MapView.show({ type: 'route', key: a.dataset.key }); break;
     case 'map-seg': MiniMap.close(); UI.go('mapa'); MapView.show({ type: 'route', key: a.dataset.key || 'ist__base', seg: a.dataset.seg === '' || a.dataset.seg === undefined ? undefined : +a.dataset.seg }); break;
     case 'mini-map': MiniMap.open(a); break;
+    case 'rain': S.rain = !S.rain; save(); MiniMap.close(); UI.render(); UI.toast(t(S.rain ? 'rainOnT' : 'rainOffT')); if (MapView.map && MapView.ready) { MapView.draw(); MapView.fit(); } break;
+    case 'map-dir': S.mapDir = a.dataset.dir; save(); if (MapView.map && MapView.ready) { MapView.draw(); MapView.fit(); } break;
+    case 'map-step': MapView.legStep(+a.dataset.d); break;
     case 'mini-close': MiniMap.close(); break;
     case 'map-circuit': UI.go('mapa'); MapView.show({ type: 'circuit', id }); break;
     case 'map-prev': MapView.step(-1); break;

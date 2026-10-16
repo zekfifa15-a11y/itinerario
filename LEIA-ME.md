@@ -35,6 +35,14 @@ Também foi corrigido: pouso no IST às **11:15** e volta em **4/11** (voo 20:35
 - **Ida e volta separadas em todos os mapas**: cada linha corre do lado direito do sentido em que você anda, com setas; a volta tem outra cor (azul a pé, rosa no transporte).
 - 23/10 sem museu (saiu o İstanbul Modern).
 
+## Novidades da versão 6.4 (15/10)
+
+- **Modo chuva** (botão ☂ no topo): troca os trechos longos a pé por bonde, metrô ou funicular e recalcula os horários do dia. Onde não há transporte, o trecho a pé fica marcado com ☂.
+- **Mapa mais claro**: filtro **Tudo · Ida · Volta** e botões ‹ › para ver **um trecho de cada vez**, com o passo a passo embaixo.
+- **"Ver no Google"** abre o cartão do lugar no Google Maps (fotos e avaliações), não uma busca no mapa.
+- Balsas e ônibus com instruções de embarque (píer, placa, sentido) — por exemplo no dia 27/10.
+- Roteiro revisto: döner obrigatório, culto no domingo 1/11, compras na İstiklal em 29/10, folhas de uva no azeite em 3/11 e trocas de restaurantes e cafés da manhã.
+
 ## Novidades da versão 6.3 (14/10)
 
 - **Mapas sempre arrastáveis**: o mapa grande responde a arrastar e pinçar em qualquer tela, e arrastar desliga o "seguir minha posição" para o GPS não puxar o mapa de volta. Os mapinhas da chegada (dia 21) viram um mapa de verdade ao tocar — dá para arrastar e dar zoom ali mesmo, ou abrir em tela cheia.
